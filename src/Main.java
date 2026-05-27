@@ -1,6 +1,6 @@
 import config.Koneksi;
 import com.formdev.flatlaf.FlatLightLaf;
-import view.auth.LoginView;
+import view.admin.DashboardView;
 
 public class Main {
 
@@ -12,7 +12,7 @@ public class Main {
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            new LoginView().setVisible(true);
+            new DashboardView().setVisible(true);
         });
     }
     }
