@@ -88,11 +88,11 @@ public class LoginView extends javax.swing.JFrame {
         username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         username.setToolTipText("Enter your username");
 
+        login.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         login.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        login.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        login.setForeground(new java.awt.Color(255, 255, 255));
         login.setText("Login");
         login.setToolTipText("Continue to dashboard");
-        login.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"), null));
         login.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         login.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -153,9 +153,8 @@ public class LoginView extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
-        register.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        register.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        register.setForeground(java.awt.Color.white);
+        register.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        register.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         register.setText("Register as a member");
         register.setToolTipText("Join the library");
         register.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -232,7 +231,7 @@ public class LoginView extends javax.swing.JFrame {
                 .addComponent(show_password)
                 .addGap(28, 28, 28)
                 .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addComponent(register)
                 .addGap(16, 16, 16))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -252,6 +251,32 @@ public class LoginView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_btnExitMouseClicked
+
+    private void registerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseExited
+        // TODO add your handling code here:
+        register.setSize(
+            register.getWidth() - 6,
+            register.getHeight() - 4
+        );
+    }//GEN-LAST:event_registerMouseExited
+
+    private void registerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseEntered
+        // TODO add your handling code here:
+        register.setSize(
+            register.getWidth() + 6,
+            register.getHeight() + 4
+        );
+    }//GEN-LAST:event_registerMouseEntered
+
+    private void registerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseClicked
+        new RegisterView().setVisible(true);
+
+        dispose();
+    }//GEN-LAST:event_registerMouseClicked
+
     private void show_passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_show_passwordActionPerformed
         PasswordUtil.togglePassword(password, show_password);
     }//GEN-LAST:event_show_passwordActionPerformed
@@ -262,18 +287,18 @@ public class LoginView extends javax.swing.JFrame {
         String passwordValue = String.valueOf(
             password.getPassword()
         );
-        
+
         if (usernameValue.isEmpty() || passwordValue.isEmpty()) {
 
-        JOptionPane.showMessageDialog(
-            this,
-            "Please fill in all fields",
-            "Warning",
-            JOptionPane.WARNING_MESSAGE
-        );
+            JOptionPane.showMessageDialog(
+                this,
+                "Please fill in all fields",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE
+            );
 
-        return;
-    }
+            return;
+        }
 
         JOptionPane.showMessageDialog(
             this,
@@ -283,59 +308,35 @@ public class LoginView extends javax.swing.JFrame {
         );
     }//GEN-LAST:event_loginActionPerformed
 
-    private void loginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseEntered
-       login.setBackground(
-        UIManager.getColor("Actions.Blue")
-    );
-
-        login.setForeground(Color.WHITE);
-
-        login.setBorder(null);
-    }//GEN-LAST:event_loginMouseEntered
-
     private void loginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseExited
-        login.setBackground(Color.WHITE);
+        login.setBackground(UIManager.getColor("Actions.Blue"));
 
-    login.setForeground(
-        UIManager.getColor("Actions.Blue")
-    );
+        login.setForeground(
+            Color.WHITE
+        );
 
-    login.setBorder(
-        BorderFactory.createLineBorder(
-            UIManager.getColor("Actions.Blue")
-        )
-    );
+        login.setBorder(
+           null
+        );
     }//GEN-LAST:event_loginMouseExited
 
-    private void registerMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseEntered
-        // TODO add your handling code here:
-        register.setSize(
-        register.getWidth() + 6,
-        register.getHeight() + 4
-    );
-    }//GEN-LAST:event_registerMouseEntered
+    private void loginMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseEntered
+        login.setBackground(
+            Color.WHITE 
+        );
 
-    private void registerMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseExited
-        // TODO add your handling code here:
-        register.setSize(
-        register.getWidth() - 6,
-        register.getHeight() - 4
-    );
-    }//GEN-LAST:event_registerMouseExited
+        login.setForeground(UIManager.getColor("Actions.Blue"));
 
-    private void registerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerMouseClicked
-        new RegisterView().setVisible(true);
-
-        dispose();
-    }//GEN-LAST:event_registerMouseClicked
+        login.setBorder(
+         BorderFactory.createLineBorder(
+                UIManager.getColor("Actions.Blue")
+            )
+        );
+    }//GEN-LAST:event_loginMouseEntered
 
     private void loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseClicked
-       
-    }//GEN-LAST:event_loginMouseClicked
 
-    private void btnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseClicked
-        System.exit(0);
-    }//GEN-LAST:event_btnExitMouseClicked
+    }//GEN-LAST:event_loginMouseClicked
 
     /**
      * @param args the command line arguments
