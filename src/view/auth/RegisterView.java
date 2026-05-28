@@ -49,7 +49,7 @@ public class RegisterView extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         username3 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        username4 = new javax.swing.JTextField();
+        no_hp = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         btnExit = new javax.swing.JButton();
@@ -153,8 +153,13 @@ public class RegisterView extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Nomor Handphone");
 
-        username4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username4.setToolTipText("Enter your username");
+        no_hp.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        no_hp.setToolTipText("Enter your username");
+        no_hp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                no_hpKeyTyped(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(51, 51, 51));
@@ -207,7 +212,7 @@ public class RegisterView extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(login, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(register, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(username4)
+                            .addComponent(no_hp)
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -246,7 +251,7 @@ public class RegisterView extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(no_hp, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -353,6 +358,18 @@ public class RegisterView extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_btnExitMouseClicked
 
+    private void no_hpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_no_hpKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+
+        if (!Character.isDigit(c) 
+            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+            && c != java.awt.event.KeyEvent.VK_DELETE) {
+
+            evt.consume();
+        }
+    }//GEN-LAST:event_no_hpKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -394,12 +411,12 @@ public class RegisterView extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JButton login;
+    private javax.swing.JTextField no_hp;
     private javax.swing.JPasswordField password;
     private javax.swing.JButton register;
     private javax.swing.JTextField username;
     private javax.swing.JTextField username1;
     private javax.swing.JTextField username2;
     private javax.swing.JTextField username3;
-    private javax.swing.JTextField username4;
     // End of variables declaration//GEN-END:variables
 }

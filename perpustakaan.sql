@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 25, 2026 at 06:33 PM
+-- Generation Time: May 28, 2026 at 01:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,11 +31,16 @@ CREATE TABLE `admin` (
   `id_admin` int(11) NOT NULL,
   `user_id` int(15) NOT NULL,
   `jabatan` varchar(100) NOT NULL,
-  `no_hp` varchar(100) NOT NULL,
-  `alamat` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id_admin`, `user_id`, `jabatan`, `created_at`, `updated_at`) VALUES
+(1, 1, 'developer', '2026-05-28 07:52:01', '2026-05-28 07:52:01');
 
 -- --------------------------------------------------------
 
@@ -67,7 +72,8 @@ CREATE TABLE `buku` (
   `pengarang` varchar(100) DEFAULT NULL,
   `penerbit` varchar(100) DEFAULT NULL,
   `tahun_terbit` varchar(10) DEFAULT NULL,
-  `stok` int(11) NOT NULL
+  `stok` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -82,7 +88,7 @@ CREATE TABLE `peminjaman` (
   `id_buku` int(11) DEFAULT NULL,
   `tanggal_pinjam` date DEFAULT NULL,
   `tanggal_kembali` date DEFAULT NULL,
-  `status` varchar(20) DEFAULT NULL
+  `status` enum('dipinjam','dikembalikan') DEFAULT 'dipinjam'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -100,6 +106,13 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `name`, `password`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'akbar123', 'Akbar Maulana Purba', '123', 'admin', '2026-05-28 07:51:08', '2026-05-28 07:51:08');
 
 --
 -- Indexes for dumped tables
@@ -149,7 +162,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `anggota`
@@ -173,7 +186,7 @@ ALTER TABLE `peminjaman`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
