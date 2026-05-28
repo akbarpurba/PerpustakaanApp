@@ -1,6 +1,6 @@
 import config.Koneksi;
 import com.formdev.flatlaf.FlatLightLaf;
-import view.admin.DashboardView;
+import view.member.DashboardView;
 
 public class Main {
 
