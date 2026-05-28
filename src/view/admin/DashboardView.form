@@ -288,6 +288,9 @@
                 <Property name="label" type="java.lang.String" value="Members"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnMemberMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnBook">
               <Properties>
@@ -308,6 +311,10 @@
                 <Property name="label" type="java.lang.String" value="Books"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnBookMouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBookActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnBorrow">
               <Properties>
@@ -327,6 +334,9 @@
                 <Property name="label" type="java.lang.String" value="Borrowings"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnBorrowMouseClicked"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnAdmin">
               <Properties>

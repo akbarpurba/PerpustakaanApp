@@ -4,6 +4,7 @@
  */
 package view.admin;
 import javax.swing.*;
+import utils.FormUtils;
  /*
  * @author Acer
  */
@@ -134,6 +135,11 @@ public class DashboardView extends javax.swing.JFrame {
         btnMember.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnMember.setLabel("Members");
         btnMember.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnMember.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMemberMouseClicked(evt);
+            }
+        });
 
         btnBook.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBook.setForeground(new java.awt.Color(51, 51, 51));
@@ -143,6 +149,12 @@ public class DashboardView extends javax.swing.JFrame {
         btnBook.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBook.setLabel("Books");
         btnBook.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnBook.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBookMouseClicked(evt);
+            }
+        });
+        btnBook.addActionListener(this::btnBookActionPerformed);
 
         btnBorrow.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBorrow.setForeground(new java.awt.Color(51, 51, 51));
@@ -151,6 +163,11 @@ public class DashboardView extends javax.swing.JFrame {
         btnBorrow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBorrow.setLabel("Borrowings");
         btnBorrow.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnBorrow.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnBorrowMouseClicked(evt);
+            }
+        });
 
         btnAdmin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAdmin.setForeground(new java.awt.Color(51, 51, 51));
@@ -294,9 +311,24 @@ public class DashboardView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitMouseClicked
 
     private void btnAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAdminMouseClicked
-        new AdminView().setVisible(true);
-        dispose();
+        FormUtils.openForm(this, new AdminView());
     }//GEN-LAST:event_btnAdminMouseClicked
+
+    private void btnMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMemberMouseClicked
+        FormUtils.openForm(this, new MemberView());
+    }//GEN-LAST:event_btnMemberMouseClicked
+
+    private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBookActionPerformed
+
+    private void btnBookMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBookMouseClicked
+        FormUtils.openForm(this, new BookView());
+    }//GEN-LAST:event_btnBookMouseClicked
+
+    private void btnBorrowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBorrowMouseClicked
+       FormUtils.openForm(this, new BorrowView());
+    }//GEN-LAST:event_btnBorrowMouseClicked
 
     /**
      * @param args the command line arguments
