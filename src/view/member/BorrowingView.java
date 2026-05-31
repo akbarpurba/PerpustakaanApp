@@ -6,9 +6,15 @@ package view.member;
 
 import utils.FormUtils;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Calendar;
-
+import controller.AnggotaController;
+import controller.PeminjamanController;
+import model.Anggota;
+import config.Session;
+import utils.MessageUtil;
+import model.Peminjaman;
 /**
  *
  * @author Acer
@@ -23,21 +29,35 @@ public class BorrowingView extends javax.swing.JFrame {
     public BorrowingView() {
         initComponents();
         setLocationRelativeTo(null);
+        nama.requestFocus();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        tanggal.setText(sdf.format(new Date()));
+        tanggal_pinjam.setText(sdf.format(new Date()));
+        loadProfile();
     }
     
-    public Date getDeadlineKembali(Date tanggalPinjam, int lamaPinjam) {
+    private void loadProfile() {
 
-    Calendar cal = Calendar.getInstance();
+    AnggotaController anggotaController
+            = new AnggotaController();
 
-    cal.setTime(tanggalPinjam);
+    Anggota anggota
+            = anggotaController.getProfile(
+                    Session.id
+            );
 
-    cal.add(Calendar.DAY_OF_MONTH, lamaPinjam);
+    if (anggota != null) {
 
-    return cal.getTime();
+        nama.setText(
+                anggota.getName()
+        );
+
+        no_hp.setText(
+                anggota.getNoHp()
+        );
+    }
 }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,18 +81,20 @@ public class BorrowingView extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nama = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        tanggal = new javax.swing.JTextField();
+        tanggal_pinjam = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         lama_pinjam = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        pinjam = new javax.swing.JButton();
+        reset = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         no_hp = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        judul = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        tanggal_kembali = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -96,7 +118,7 @@ public class BorrowingView extends javax.swing.JFrame {
         btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAbout.setForeground(new java.awt.Color(51, 51, 51));
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/about.png"))); // NOI18N
-        btnAbout.setText("About");
+        btnAbout.setText("Daftar Pinjam");
         btnAbout.setBorderPainted(false);
         btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -112,7 +134,7 @@ public class BorrowingView extends javax.swing.JFrame {
         btnBorrow.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBorrow.setForeground(new java.awt.Color(255, 255, 255));
         btnBorrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/pinjam.png"))); // NOI18N
-        btnBorrow.setText("Borrowing");
+        btnBorrow.setText("Pinjam Buku");
         btnBorrow.setBorderPainted(false);
         btnBorrow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBorrow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -127,7 +149,7 @@ public class BorrowingView extends javax.swing.JFrame {
         btnAccount.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAccount.setForeground(new java.awt.Color(51, 51, 51));
         btnAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/account.png"))); // NOI18N
-        btnAccount.setText("Account");
+        btnAccount.setText("Akun");
         btnAccount.setBorderPainted(false);
         btnAccount.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAccount.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -141,7 +163,7 @@ public class BorrowingView extends javax.swing.JFrame {
         btnExit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnExit.setForeground(new java.awt.Color(51, 51, 51));
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/close.png"))); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Keluar");
         btnExit.setBorderPainted(false);
         btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -159,16 +181,14 @@ public class BorrowingView extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnBorrow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnAbout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(btnAccount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -191,7 +211,7 @@ public class BorrowingView extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel2.setForeground(java.awt.Color.white);
-        jLabel2.setText("Borrowing");
+        jLabel2.setText("Pinjam Buku");
 
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jButton7.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
@@ -206,7 +226,7 @@ public class BorrowingView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -226,7 +246,9 @@ public class BorrowingView extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(102, 102, 102));
         jLabel1.setText("Nama");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        nama.setEditable(false);
+        nama.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        nama.addActionListener(this::namaActionPerformed);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(102, 102, 102));
@@ -236,17 +258,20 @@ public class BorrowingView extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(102, 102, 102));
         jLabel4.setText("Tanggal Pinjam");
 
-        tanggal.setEditable(false);
-        tanggal.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tanggal_pinjam.setEditable(false);
+        tanggal_pinjam.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(102, 102, 102));
         jLabel5.setText("Lama Peminjaman (Hari)");
 
         lama_pinjam.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lama_pinjam.setText("1");
         lama_pinjam.setToolTipText("Jangka waktu pinjam");
+        lama_pinjam.addActionListener(this::lama_pinjamActionPerformed);
         lama_pinjam.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                lama_pinjamKeyReleased(evt);
+            }
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 lama_pinjamKeyTyped(evt);
             }
@@ -256,39 +281,47 @@ public class BorrowingView extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(102, 102, 102));
         jLabel7.setText("Peminjaman Buku");
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(java.awt.Color.white);
-        jButton1.setText("Pinjam");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        pinjam.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        pinjam.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        pinjam.setForeground(java.awt.Color.white);
+        pinjam.setText("Pinjam");
+        pinjam.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        pinjam.addActionListener(this::pinjamActionPerformed);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton2.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setText("Reset");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        reset.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        reset.setText("Reset");
+        reset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.addActionListener(this::resetActionPerformed);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(102, 102, 102));
         jLabel8.setText("Nomor Hp");
 
+        no_hp.setEditable(false);
         no_hp.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        no_hp.addActionListener(this::no_hpActionPerformed);
         no_hp.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 no_hpKeyTyped(evt);
             }
         });
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Belajar Dasar Java", "React Basic", "PHP for Backend Dev", "Dasar HTML, CSS dan JS" }));
+        judul.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 102, 102));
+        jLabel6.setText("Tanggal Kembali");
+
+        tanggal_kembali.setEditable(false);
+        tanggal_kembali.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(187, 187, 187)
+                .addGap(186, 186, 186)
                 .addComponent(jLabel7)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -298,28 +331,30 @@ public class BorrowingView extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel8)
                     .addComponent(jLabel4)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tanggal_kembali)
+                    .addComponent(nama)
+                    .addComponent(judul, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(no_hp)
-                    .addComponent(tanggal)
+                    .addComponent(tanggal_pinjam)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lama_pinjam))
                 .addGap(56, 56, 56))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addContainerGap()
                 .addComponent(jLabel7)
-                .addGap(37, 37, 37)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -327,21 +362,25 @@ public class BorrowingView extends javax.swing.JFrame {
                     .addComponent(jLabel8))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(judul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tanggal_pinjam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lama_pinjam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
-                .addGap(30, 30, 30)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(tanggal_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(21, 21, 21)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pinjam)
+                    .addComponent(reset))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -441,16 +480,68 @@ public class BorrowingView extends javax.swing.JFrame {
 
     private void btnHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMouseClicked
         // TODO add your handling code here:
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AnggotaDashboardView());
     }//GEN-LAST:event_btnHomeMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void pinjamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pinjamActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        /*
+         Buku selectedBuku
+            = (Buku) judul_buku
+                    .getSelectedItem();
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    Peminjaman peminjaman
+            = new Peminjaman();
+
+    peminjaman.setIdAnggota(
+            Session.id
+    );
+
+    peminjaman.setIdBuku(
+            selectedBuku.getIdBuku()
+    );
+
+    peminjaman.setTanggalPinjam(
+            tanggal_pinjam.getText()
+    );
+
+    peminjaman.setLamaPeminjaman(
+            Integer.parseInt(
+                    lama_pinjam.getText()
+            )
+    );
+
+    peminjaman.setTanggalKembali(
+            tanggal_kembali.getText()
+    );
+
+    PeminjamanController controller
+            = new PeminjamanController();
+
+    boolean success
+            = controller.pinjamBuku(
+                    peminjaman
+            );
+
+    if (success) {
+
+        MessageUtil.success(
+                this,
+                "Book borrowed successfully"
+        );
+
+    } else {
+
+        MessageUtil.error(
+                this,
+                "Failed to borrow book"
+        );
+    }*/
+    }//GEN-LAST:event_pinjamActionPerformed
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_resetActionPerformed
 
     private void lama_pinjamKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lama_pinjamKeyTyped
         // TODO add your handling code here:
@@ -475,6 +566,47 @@ public class BorrowingView extends javax.swing.JFrame {
             evt.consume();
         }   
     }//GEN-LAST:event_no_hpKeyTyped
+
+    private void namaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaActionPerformed
+        // TODO add your handling code here:
+        no_hp.requestFocus();
+    }//GEN-LAST:event_namaActionPerformed
+
+    private void no_hpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_no_hpActionPerformed
+        // TODO add your handling code here:
+        tanggal_pinjam.requestFocus();
+    }//GEN-LAST:event_no_hpActionPerformed
+
+    private void lama_pinjamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lama_pinjamActionPerformed
+        // TODO add your handling code here:
+        pinjam.requestFocus();
+    }//GEN-LAST:event_lama_pinjamActionPerformed
+
+    private void lama_pinjamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lama_pinjamKeyReleased
+        // TODO add your handling code here:
+         try {
+
+        int lama = Integer.parseInt(
+                lama_pinjam.getText()
+        );
+
+        LocalDate tanggalPinjam
+                = LocalDate.parse(
+                        tanggal_pinjam.getText()
+                );
+
+        LocalDate tanggalKembali
+                = tanggalPinjam.plusDays(lama);
+
+        tanggal_kembali.setText(
+                tanggalKembali.toString()
+        );
+
+    } catch (Exception e) {
+
+        tanggal_kembali.setText("");
+    }
+    }//GEN-LAST:event_lama_pinjamKeyReleased
 
     /**
      * @param args the command line arguments
@@ -507,15 +639,13 @@ public class BorrowingView extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrow;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton7;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -524,9 +654,13 @@ public class BorrowingView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JComboBox<String> judul;
     private javax.swing.JTextField lama_pinjam;
+    private javax.swing.JTextField nama;
     private javax.swing.JTextField no_hp;
-    private javax.swing.JTextField tanggal;
+    private javax.swing.JButton pinjam;
+    private javax.swing.JButton reset;
+    private javax.swing.JTextField tanggal_kembali;
+    private javax.swing.JTextField tanggal_pinjam;
     // End of variables declaration//GEN-END:variables
 }

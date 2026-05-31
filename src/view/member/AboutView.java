@@ -85,7 +85,8 @@ public class AboutView extends javax.swing.JFrame {
         btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAbout.setForeground(new java.awt.Color(255, 255, 255));
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/about.png"))); // NOI18N
-        btnAbout.setText("About");
+        btnAbout.setText("Daftar Pinjam");
+        btnAbout.setToolTipText("");
         btnAbout.setBorderPainted(false);
         btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -100,7 +101,7 @@ public class AboutView extends javax.swing.JFrame {
         btnBorrow.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBorrow.setForeground(new java.awt.Color(51, 51, 51));
         btnBorrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/pinjam.png"))); // NOI18N
-        btnBorrow.setText("Borrowing");
+        btnBorrow.setText("Pinjam Buku");
         btnBorrow.setBorderPainted(false);
         btnBorrow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBorrow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -115,7 +116,7 @@ public class AboutView extends javax.swing.JFrame {
         btnAccount.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAccount.setForeground(new java.awt.Color(51, 51, 51));
         btnAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/account.png"))); // NOI18N
-        btnAccount.setText("Account");
+        btnAccount.setText("Akun");
         btnAccount.setBorderPainted(false);
         btnAccount.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAccount.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -129,7 +130,7 @@ public class AboutView extends javax.swing.JFrame {
         btnExit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnExit.setForeground(new java.awt.Color(51, 51, 51));
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/close.png"))); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Keluar");
         btnExit.setBorderPainted(false);
         btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -147,16 +148,14 @@ public class AboutView extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnBorrow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnAbout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(btnAccount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -179,7 +178,7 @@ public class AboutView extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel2.setForeground(java.awt.Color.white);
-        jLabel2.setText("About");
+        jLabel2.setText("Daftar Pinjam");
 
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jButton7.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
@@ -194,7 +193,7 @@ public class AboutView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 471, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -484,7 +483,7 @@ public class AboutView extends javax.swing.JFrame {
 
     private void btnHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMouseClicked
         // TODO add your handling code here:
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AnggotaDashboardView());
     }//GEN-LAST:event_btnHomeMouseClicked
 
     private void btnAboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAboutMouseClicked

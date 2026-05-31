@@ -1,4 +1,4 @@
-import config.Koneksi;
+import config.Database;
 import com.formdev.flatlaf.FlatLightLaf;
 import view.auth.LoginView;
 

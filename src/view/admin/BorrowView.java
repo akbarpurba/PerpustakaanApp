@@ -4,6 +4,13 @@
  */
 package view.admin;
 import utils.FormUtils;
+import controller.BukuController;
+import java.util.ArrayList;
+import model.Buku;
+import controller.PeminjamanController;
+import model.Peminjaman;
+import javax.swing.table.DefaultTableModel;
+import utils.MessageUtil;
 /**
  *
  * @author Acer
@@ -17,8 +24,43 @@ public class BorrowView extends javax.swing.JFrame {
      */
     public BorrowView() {
         initComponents();
+        loadBuku();
+        loadData();
     }
-
+    private void loadData(){
+        DefaultTableModel model
+                = (DefaultTableModel) table_pinjam.getModel();
+        model.setRowCount(0);
+        PeminjamanController peminjamanController = new PeminjamanController();
+        ArrayList<Peminjaman> list = peminjamanController.getAllPeminjaman();
+        for(Peminjaman pinjam : list){
+            Object[] row = {
+                pinjam.getIdPinjam(),
+                pinjam.getNama(),
+                pinjam.getJudulBuku(),
+                pinjam.getTanggalPinjam(),
+                pinjam.getLamaPeminjaman(),
+                pinjam.getTanggalKembali()
+            };
+        }
+    }
+    private void loadBuku(){
+        BukuController bukuController = new BukuController();
+        ArrayList<Buku> list = bukuController.getAllBuku();
+        cmbBuku.removeAllItems();
+        cmbBuku.addItem("-- Pilih Buku --");
+        
+        for(Buku buku : list){
+            cmbBuku.addItem(buku.getJudulBuku());
+        }
+    }
+    
+    private void resetForm(){
+        idPinjam.setText("");
+        nama.setText("");
+        cmbBuku.setSelectedIndex(0);
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,25 +72,25 @@ public class BorrowView extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        username5 = new javax.swing.JTextField();
+        idPinjam = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        username1 = new javax.swing.JTextField();
-        username2 = new javax.swing.JTextField();
-        username7 = new javax.swing.JTextField();
+        nama = new javax.swing.JTextField();
+        tanggalPinjam = new javax.swing.JTextField();
+        tanggalKembali = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        username = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        update = new javax.swing.JButton();
+        reset = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        add = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table_pinjam = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        status = new javax.swing.JComboBox<>();
+        cmbBuku = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Borrowing");
@@ -60,9 +102,9 @@ public class BorrowView extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(51, 51, 51));
         jLabel4.setText("Judul Buku");
 
-        username5.setEditable(false);
-        username5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username5.setToolTipText("Enter your username");
+        idPinjam.setEditable(false);
+        idPinjam.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        idPinjam.setToolTipText("Enter your username");
 
         btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(153, 153, 153));
@@ -81,16 +123,16 @@ public class BorrowView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jLabel1.setText("Manage Borrowing");
+        jLabel1.setText("Kelola Peminjaman");
 
-        username1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username1.setToolTipText("Enter your username");
+        nama.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        nama.setToolTipText("Enter your username");
 
-        username2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username2.setToolTipText("Enter your username");
+        tanggalPinjam.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tanggalPinjam.setToolTipText("Enter your username");
 
-        username7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username7.setToolTipText("Enter your username");
+        tanggalKembali.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tanggalKembali.setToolTipText("Enter your username");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(51, 51, 51));
@@ -104,42 +146,35 @@ public class BorrowView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(51, 51, 51));
         jLabel2.setText("Nama Peminjam");
 
-        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(java.awt.Color.white);
-        jButton5.setText("Update");
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        update.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        update.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        update.setForeground(java.awt.Color.white);
+        update.setText("Update");
+        update.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        update.addActionListener(this::updateActionPerformed);
 
-        username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username.setToolTipText("Enter your username");
+        reset.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        reset.setForeground(java.awt.Color.white);
+        reset.setText("Reset");
+        reset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setForeground(java.awt.Color.white);
-        jButton3.setText("Reset");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        delete.setForeground(java.awt.Color.white);
+        delete.setText("Delete");
+        delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(java.awt.Color.white);
-        jButton4.setText("Delete");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        add.setForeground(java.awt.Color.white);
+        add.setText("Add");
+        add.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.addActionListener(this::addActionPerformed);
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(java.awt.Color.white);
-        jButton1.setText("Add");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_pinjam.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "Burhan", "Belajar Dasar Java", "12/10/2015", "-", "Dipinjam"},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Nama Peminjam", "Judul Buku", "Tanggal Pinjam", "Tanggal Kembali", "Status"
@@ -153,17 +188,20 @@ public class BorrowView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jTable1.setShowVerticalLines(true);
-        jScrollPane1.setViewportView(jTable1);
+        table_pinjam.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        table_pinjam.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table_pinjam.setShowGrid(true);
+        jScrollPane1.setViewportView(table_pinjam);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 51, 51));
         jLabel3.setText("Status");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dipinjam", "Dikembalikan" }));
+        status.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dipinjam", "Dikembalikan" }));
+
+        cmbBuku.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cmbBuku.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -175,31 +213,34 @@ public class BorrowView extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(131, 131, 131)
+                        .addGap(123, 123, 123)
                         .addComponent(btnBack)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 268, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(cmbBuku, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(51, 51, 51)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(77, 77, 77))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(idPinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tanggalPinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(username7, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tanggalKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13))
                         .addGap(77, 77, 77))))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -207,13 +248,13 @@ public class BorrowView extends javax.swing.JFrame {
                 .addComponent(jScrollPane1))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(203, 203, 203)
-                .addComponent(jButton1)
+                .addComponent(add)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
+                .addComponent(update)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
+                .addComponent(delete)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(reset)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -226,35 +267,35 @@ public class BorrowView extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(idPinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tanggalPinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username7, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tanggalKembali, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jComboBox1))
+                    .addComponent(status, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(cmbBuku))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton3))
+                    .addComponent(add)
+                    .addComponent(delete)
+                    .addComponent(update)
+                    .addComponent(reset))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -277,12 +318,20 @@ public class BorrowView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AdminDashboardView());
     }//GEN-LAST:event_btnBackMouseClicked
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_updateActionPerformed
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+        if(nama.getText().isEmpty()){
+            
+        }
+        
+    }//GEN-LAST:event_addActionPerformed
 
     /**
      * @param args the command line arguments
@@ -310,12 +359,11 @@ public class BorrowView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add;
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbBuku;
+    private javax.swing.JButton delete;
+    private javax.swing.JTextField idPinjam;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -325,11 +373,12 @@ public class BorrowView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField username;
-    private javax.swing.JTextField username1;
-    private javax.swing.JTextField username2;
-    private javax.swing.JTextField username5;
-    private javax.swing.JTextField username7;
+    private javax.swing.JTextField nama;
+    private javax.swing.JButton reset;
+    private javax.swing.JComboBox<String> status;
+    private javax.swing.JTable table_pinjam;
+    private javax.swing.JTextField tanggalKembali;
+    private javax.swing.JTextField tanggalPinjam;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }

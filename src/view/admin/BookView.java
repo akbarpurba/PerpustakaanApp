@@ -4,6 +4,13 @@
  */
 package view.admin;
 import utils.FormUtils;
+import model.Buku;
+import controller.BukuController;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import javax.swing.ButtonGroup;
+import utils.MessageUtil;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Acer
@@ -17,8 +24,39 @@ public class BookView extends javax.swing.JFrame {
      */
     public BookView() {
         initComponents();
+        tampilData();
     }
-
+    
+    
+    private void tampilData(){
+        DefaultTableModel model  = (DefaultTableModel) table_buku.getModel();
+        model.setRowCount(0);
+        BukuController bukuController = new BukuController();
+        ArrayList <Buku> list = bukuController.getAllBuku();
+        
+        for(Buku buku : list){
+            Object[] row = {
+                buku.getIdBuku(),
+                buku.getJudulBuku(),
+                buku.getPenerbit(),
+                buku.getPengarang(),
+                buku.getTahunTerbit(),
+                buku.getStok()
+            };
+            model.addRow(row);
+        }
+        
+    }
+    
+    private void resetForm(){
+        idBuku.setText("");
+        judulBuku.setText("");
+        pengarang.setText("");
+        penerbit.setText("");
+        tahunTerbit.setText("");
+        stok.setText("");
+        judulBuku.requestFocus();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,24 +69,24 @@ public class BookView extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        username5 = new javax.swing.JTextField();
+        idBuku = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        username1 = new javax.swing.JTextField();
-        username2 = new javax.swing.JTextField();
-        username7 = new javax.swing.JTextField();
+        judulBuku = new javax.swing.JTextField();
+        penerbit = new javax.swing.JTextField();
+        tahunTerbit = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        username = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        update = new javax.swing.JButton();
+        pengarang = new javax.swing.JTextField();
+        reset = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        add = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        username4 = new javax.swing.JTextField();
+        table_buku = new javax.swing.JTable();
+        stok = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
 
         jRadioButton1.setText("jRadioButton1");
@@ -63,9 +101,9 @@ public class BookView extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(51, 51, 51));
         jLabel4.setText("Pengarang");
 
-        username5.setEditable(false);
-        username5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username5.setToolTipText("Enter your username");
+        idBuku.setEditable(false);
+        idBuku.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        idBuku.setToolTipText("Enter your username");
 
         btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(153, 153, 153));
@@ -84,16 +122,21 @@ public class BookView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jLabel1.setText("Manage Book");
+        jLabel1.setText("Kelola Buku");
 
-        username1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username1.setToolTipText("Enter your username");
+        judulBuku.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        judulBuku.setToolTipText("Enter your username");
 
-        username2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username2.setToolTipText("Enter your username");
+        penerbit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        penerbit.setToolTipText("Enter your username");
 
-        username7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username7.setToolTipText("Enter your username");
+        tahunTerbit.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        tahunTerbit.setToolTipText("Enter your username");
+        tahunTerbit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tahunTerbitKeyTyped(evt);
+            }
+        });
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(51, 51, 51));
@@ -107,69 +150,74 @@ public class BookView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(51, 51, 51));
         jLabel2.setText("Judul Buku");
 
-        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(java.awt.Color.white);
-        jButton5.setText("Update");
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        update.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        update.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        update.setForeground(java.awt.Color.white);
+        update.setText("Update");
+        update.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        update.addActionListener(this::updateActionPerformed);
 
-        username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username.setToolTipText("Enter your username");
+        pengarang.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pengarang.setToolTipText("Enter your username");
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setForeground(java.awt.Color.white);
-        jButton3.setText("Reset");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        reset.setForeground(java.awt.Color.white);
+        reset.setText("Reset");
+        reset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.addActionListener(this::resetActionPerformed);
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(java.awt.Color.white);
-        jButton4.setText("Delete");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        delete.setForeground(java.awt.Color.white);
+        delete.setText("Delete");
+        delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.addActionListener(this::deleteActionPerformed);
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(java.awt.Color.white);
-        jButton1.setText("Add");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        add.setForeground(java.awt.Color.white);
+        add.setText("Add");
+        add.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.addActionListener(this::addActionPerformed);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_buku.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                { new Integer(1), "Belajar Dasar Java", "Akbar Purba", "Akbar Writer", "2025", "100"},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Judul Buku", "Pengarang", "Penerbit", "Tahun Terbit", "Stok"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jTable1.setShowVerticalLines(true);
-        jScrollPane1.setViewportView(jTable1);
+        table_buku.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        table_buku.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table_buku.setShowGrid(true);
+        table_buku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_bukuMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_buku);
 
-        username4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username4.setToolTipText("Enter your username");
+        stok.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        stok.setToolTipText("Enter your username");
+        stok.addActionListener(this::stokActionPerformed);
+        stok.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                stokKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                stokKeyTyped(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 51, 51));
@@ -185,29 +233,29 @@ public class BookView extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(144, 144, 144)
+                        .addGap(194, 194, 194)
                         .addComponent(btnBack)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(judulBuku, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(idBuku, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(penerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5)
-                            .addComponent(username7, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13))
                         .addGap(77, 77, 77))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(pengarang, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username4, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(stok, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(77, 77, 77))))
             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -215,59 +263,58 @@ public class BookView extends javax.swing.JFrame {
                 .addComponent(jScrollPane1))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(203, 203, 203)
-                .addComponent(jButton1)
+                .addComponent(add)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
+                .addComponent(update)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
+                .addComponent(delete)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
+                .addComponent(reset)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnBack)
-                            .addComponent(jLabel1))
-                        .addGap(26, 26, 26)
+                        .addComponent(btnBack)
+                        .addGap(39, 39, 39)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(idBuku, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(judulBuku, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(penerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username7, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(6, 6, 6)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pengarang, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(stok, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton3))
+                    .addComponent(add)
+                    .addComponent(delete)
+                    .addComponent(update)
+                    .addComponent(reset))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -287,12 +334,183 @@ public class BookView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AdminDashboardView());
     }//GEN-LAST:event_btnBackMouseClicked
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        if (idBuku.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih buku terlebih dahulu"
+            );
+
+            return;
+        }
+        
+        if(judulBuku.getText().isEmpty() || 
+           pengarang.getText().isEmpty() ||
+           penerbit.getText().isEmpty() ||  
+           tahunTerbit.getText().isEmpty() ||
+           stok.getText().isEmpty()
+           ){
+            MessageUtil.warning(
+                    this,
+                    "Semua field wajib diisi"
+            );
+            return;
+        }
+        
+        Buku buku = new Buku();
+        buku.setIdBuku(Integer.parseInt(idBuku.getText()));
+        buku.setJudulBuku(judulBuku.getText());
+        buku.setPengarang(pengarang.getText());
+        buku.setPenerbit(penerbit.getText());
+        buku.setTahunTerbit(Integer.parseInt(tahunTerbit.getText()));
+        buku.setStok(Integer.parseInt(stok.getText()));
+        
+        BukuController bukuController = new BukuController();
+        boolean hasil = bukuController.updateBuku(buku);
+        if(hasil){
+            tampilData();
+            MessageUtil.success(this, "Buku berhasil diubah");
+            resetForm();
+        }else{
+            MessageUtil.error(this, "Buku gagal diubah");
+            resetForm();
+        }
+        
+    }//GEN-LAST:event_updateActionPerformed
+
+    private void stokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stokActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stokActionPerformed
+
+    private void stokKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stokKeyReleased
+       
+    }//GEN-LAST:event_stokKeyReleased
+
+    private void stokKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stokKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+
+        if (!Character.isDigit(c) 
+            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+            && c != java.awt.event.KeyEvent.VK_DELETE) {
+
+            evt.consume();
+        }
+    }//GEN-LAST:event_stokKeyTyped
+
+    private void tahunTerbitKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tahunTerbitKeyTyped
+        // TODO add your handling code here:
+        
+        char c = evt.getKeyChar();
+
+        if (!Character.isDigit(c) 
+            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+            && c != java.awt.event.KeyEvent.VK_DELETE) {
+
+            evt.consume();
+        }
+    }//GEN-LAST:event_tahunTerbitKeyTyped
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+        
+        if(judulBuku.getText().isEmpty() ||
+           penerbit.getText().isEmpty() ||
+           pengarang.getText().isEmpty() ||
+           tahunTerbit.getText().isEmpty() ||
+           stok.getText().isEmpty()){
+            MessageUtil.warning(this, "Semua field wajib diisi");
+            return;
+        }
+        Buku buku = new Buku();
+        buku.setJudulBuku(judulBuku.getText());
+        buku.setPenerbit(penerbit.getText());
+        buku.setPengarang(pengarang.getText());
+        buku.setTahunTerbit(Integer.parseInt(tahunTerbit.getText()));
+        buku.setStok(Integer.parseInt(stok.getText()));
+        BukuController bukuController = new BukuController();
+        boolean hasil = bukuController.tambahBuku(buku);
+        if(hasil){
+            tampilData();
+            MessageUtil.success(this, "Buku berhasil ditambah");
+            resetForm();
+            
+        }else{
+            MessageUtil.error(this, "Gagal menambah buku");
+            resetForm();
+        }
+    }//GEN-LAST:event_addActionPerformed
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
+        // TODO add your handling code here:
+        resetForm();
+    }//GEN-LAST:event_resetActionPerformed
+
+    private void table_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_bukuMouseClicked
+        // TODO add your handling code here:
+        int row = table_buku.getSelectedRow();
+        if(row < 0){
+            return;
+        }
+        
+        int id_buku = Integer.parseInt(table_buku.getValueAt(row, 0).toString());
+        BukuController bukuController = new BukuController();
+        Buku buku = bukuController.getBukuById(id_buku);
+        
+        if(buku != null){
+            idBuku.setText(String.valueOf(buku.getIdBuku()));
+            judulBuku.setText(buku.getJudulBuku());
+            pengarang.setText(buku.getPengarang());
+            penerbit.setText(buku.getPenerbit());
+            tahunTerbit.setText(String.valueOf(buku.getTahunTerbit()));
+            stok.setText(String.valueOf(buku.getStok()));      
+        }
+    }//GEN-LAST:event_table_bukuMouseClicked
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
+        // TODO add your handling code here:
+        if (idBuku.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih buku terlebih dahulu"
+            );
+
+            return;
+        }
+        
+        int confirm
+                = MessageUtil.confirm(
+                        this,
+                        "Hapus buku ini?"
+                );
+
+        if (confirm
+                != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+        
+        int id_buku = Integer.parseInt(idBuku.getText());
+        Buku buku = new Buku();
+        buku.setIdBuku(id_buku);
+        
+        BukuController bukuController = new BukuController();
+        boolean hasil = bukuController.hapusBuku(id_buku);
+        if(hasil){
+            tampilData();
+            MessageUtil.success(this, "Buku berhasil dihapus");
+            resetForm();
+        }else{
+            MessageUtil.error(this, "Buku gagal dihapus");
+            resetForm();
+        }
+    }//GEN-LAST:event_deleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,11 +538,10 @@ public class BookView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add;
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton delete;
+    private javax.swing.JTextField idBuku;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -335,12 +552,13 @@ public class BookView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField username;
-    private javax.swing.JTextField username1;
-    private javax.swing.JTextField username2;
-    private javax.swing.JTextField username4;
-    private javax.swing.JTextField username5;
-    private javax.swing.JTextField username7;
+    private javax.swing.JTextField judulBuku;
+    private javax.swing.JTextField penerbit;
+    private javax.swing.JTextField pengarang;
+    private javax.swing.JButton reset;
+    private javax.swing.JTextField stok;
+    private javax.swing.JTable table_buku;
+    private javax.swing.JTextField tahunTerbit;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,20 +5,73 @@
 package view.admin;
 
 import utils.FormUtils;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import controller.AnggotaController;
+import model.Anggota;
+import javax.swing.ButtonGroup;
+import utils.MessageUtil;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Acer
  */
 public class MemberView extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MemberView.class.getName());
 
+    private ButtonGroup genderGroup;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MemberView.class.getName());
+    private int selectedUserId = 0;
     /**
      * Creates new form MemberView
      */
     public MemberView() {
         initComponents();
+        
+        genderGroup = new ButtonGroup();
+
+        genderGroup.add(radio_laki);
+        genderGroup.add(radio_perempuan);
+        tampilData();
+        
+    }
+
+    private void tampilData() {
+        DefaultTableModel model
+                = (DefaultTableModel) table_member.getModel();
+        model.setRowCount(0);
+
+        AnggotaController anggotaController = new AnggotaController();
+        ArrayList<Anggota> list = anggotaController.getAllMember();
+
+        for (Anggota anggota : list) {
+            Object[] row = {
+                anggota.getIdAnggota(),
+                anggota.getUsername(),
+                anggota.getName(),
+                anggota.getEmail(),
+                anggota.getJenisKelamin(),
+                anggota.getAlamat(),
+                anggota.getNoHp(),
+                anggota.getProfesi()
+            };
+            model.addRow(row);
+        }
+    }
+
+    private void resetForm() {
+        id_member.setText("");
+        username.setText("");
+        nama.setText("");
+        email.setText("");
+        alamat.setText("");
+        noHp.setText("");
+
+        password.setText("");
+
+        cmbProfesi.setSelectedIndex(0);
+        genderGroup.clearSelection();
+        username.requestFocus();
     }
 
     /**
@@ -35,29 +88,29 @@ public class MemberView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        username = new javax.swing.JTextField();
+        nama = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        username3 = new javax.swing.JTextField();
+        alamat = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        username4 = new javax.swing.JTextField();
+        noHp = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        username1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        username2 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        username = new javax.swing.JTextField();
+        cmbProfesi = new javax.swing.JComboBox<>();
+        email = new javax.swing.JTextField();
+        reset = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        add = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table_member = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        username5 = new javax.swing.JTextField();
+        radio_laki = new javax.swing.JRadioButton();
+        radio_perempuan = new javax.swing.JRadioButton();
+        id_member = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
-        username7 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        update = new javax.swing.JButton();
+        password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Member");
@@ -79,7 +132,7 @@ public class MemberView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jLabel1.setText("Manage Member");
+        jLabel1.setText("Kelola Anggota");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(51, 51, 51));
@@ -89,22 +142,24 @@ public class MemberView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(51, 51, 51));
         jLabel2.setText("Username");
 
-        username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username.setToolTipText("Enter your username");
+        nama.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        nama.setToolTipText("Enter your username");
+        nama.addActionListener(this::namaActionPerformed);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(51, 51, 51));
         jLabel7.setText("Alamat");
 
-        username3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username3.setToolTipText("Enter your username");
+        alamat.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        alamat.setToolTipText("Enter your username");
+        alamat.addActionListener(this::alamatActionPerformed);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(51, 51, 51));
         jLabel8.setText("Nomor Handphone");
 
-        username4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username4.setToolTipText("Enter your username");
+        noHp.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        noHp.setToolTipText("Enter your username");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(51, 51, 51));
@@ -114,44 +169,57 @@ public class MemberView extends javax.swing.JFrame {
         jLabel9.setForeground(new java.awt.Color(51, 51, 51));
         jLabel9.setText("Profesi");
 
-        username1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username1.setToolTipText("Enter your username");
+        username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        username.setToolTipText("Enter your username");
+        username.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                usernameFocusLost(evt);
+            }
+        });
+        username.addActionListener(this::usernameActionPerformed);
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pelajar/Siswa", "Mahasiswa", "Guru/Dosen", "PNS", "Pegawai Swasta", "Wiraswasta", "Buruh", "Freelancer", "Tidak Bekerja", "Rakyat Jelata" }));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
+        cmbProfesi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cmbProfesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pelajar/Siswa", "Mahasiswa", "Guru/Dosen", "PNS", "Pegawai Swasta", "Wiraswasta", "Buruh", "Freelancer", "Tidak Bekerja", "Rakyat Jelata" }));
+        cmbProfesi.addActionListener(this::cmbProfesiActionPerformed);
 
-        username2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username2.setToolTipText("Enter your username");
+        email.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        email.setToolTipText("Enter your username");
+        email.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                emailFocusLost(evt);
+            }
+        });
+        email.addActionListener(this::emailActionPerformed);
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton3.setForeground(java.awt.Color.white);
-        jButton3.setText("Reset");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        reset.setForeground(java.awt.Color.white);
+        reset.setText("Reset");
+        reset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.addActionListener(this::resetActionPerformed);
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton4.setForeground(java.awt.Color.white);
-        jButton4.setText("Delete");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        delete.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        delete.setForeground(java.awt.Color.white);
+        delete.setText("Delete");
+        delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.addActionListener(this::deleteActionPerformed);
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setForeground(java.awt.Color.white);
-        jButton1.setText("Add");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        add.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        add.setForeground(java.awt.Color.white);
+        add.setText("Add");
+        add.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        add.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                addFocusLost(evt);
+            }
+        });
+        add.addActionListener(this::addActionPerformed);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_member.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "akbar123", "Akbar Maulana Purba", "akbarpurba499@gmail.com", "Laki-laki", "Perbaungan", "08124454545", "Mahasiswa"},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Username", "Nama", "Email", "Jenis Kelamin", "Alamat", "No HP", "Profesi"
@@ -165,42 +233,48 @@ public class MemberView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jTable1.setShowVerticalLines(true);
-        jScrollPane1.setViewportView(jTable1);
+        table_member.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        table_member.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table_member.setShowGrid(true);
+        table_member.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_memberMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_member);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(51, 51, 51));
         jLabel10.setText("Jenis Kelamin");
 
-        jRadioButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jRadioButton3.setText("Laki-laki");
+        radio_laki.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        radio_laki.setText("Laki-laki");
 
-        jRadioButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jRadioButton4.setText("Perempuan");
+        radio_perempuan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        radio_perempuan.setText("Perempuan");
 
-        username5.setEditable(false);
-        username5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username5.setToolTipText("Enter your username");
+        id_member.setEditable(false);
+        id_member.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        id_member.setToolTipText("Enter your username");
+        id_member.addActionListener(this::id_memberActionPerformed);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(51, 51, 51));
         jLabel11.setText("ID");
 
-        username7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        username7.setToolTipText("Enter your username");
-
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(51, 51, 51));
         jLabel13.setText("Password");
 
-        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton5.setForeground(java.awt.Color.white);
-        jButton5.setText("Update");
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        update.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        update.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        update.setForeground(java.awt.Color.white);
+        update.setText("Update");
+        update.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        update.addActionListener(this::updateActionPerformed);
+
+        password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        password.addActionListener(this::passwordActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -212,49 +286,51 @@ public class MemberView extends javax.swing.JFrame {
                         .addGap(72, 72, 72)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
-                                .addGap(115, 115, 115)
+                                .addGap(154, 154, 154)
                                 .addComponent(btnBack))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(username7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGap(57, 57, 57)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel13)
+                                        .addGap(282, 282, 282))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(password)
+                                        .addGap(57, 57, 57)))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(username3, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel7)
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(username4)
+                                                .addComponent(noHp)
                                                 .addComponent(jLabel8)
                                                 .addComponent(jLabel9)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(cmbProfesi, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(jLabel10)
                                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(jRadioButton3)
+                                                    .addComponent(radio_laki)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(jRadioButton4))))
+                                                    .addComponent(radio_perempuan))))
                                         .addGap(43, 43, 43))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jButton1)
+                                        .addComponent(add)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton5)
+                                        .addComponent(update)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton4)
+                                        .addComponent(delete)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton3))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel11)
-                                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addGap(10, 10, 10))))
+                                        .addComponent(reset))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel4)
+                                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(id_member, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11)
+                                .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
@@ -267,57 +343,57 @@ public class MemberView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBack)
                     .addComponent(jLabel1))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(26, 26, 26)
-                        .addComponent(username3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(alamat, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(id_member, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(username7, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton4)
-                            .addComponent(jButton5)
-                            .addComponent(jButton3))
-                        .addGap(18, 18, 18))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(add)
+                                .addComponent(delete)
+                                .addComponent(update)
+                                .addComponent(reset))
+                            .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(username4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(noHp, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbProfesi, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton3)
-                            .addComponent(jRadioButton4))
-                        .addGap(10, 10, 10)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(radio_laki)
+                            .addComponent(radio_perempuan))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -335,16 +411,281 @@ public class MemberView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AdminDashboardView());
     }//GEN-LAST:event_btnBackMouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cmbProfesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProfesiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cmbProfesiActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        if (id_member.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih data admin terlebih dahulu"
+            );
+
+            return;
+        }
+        AnggotaController anggotaController = new AnggotaController();
+        int idAnggota = Integer.parseInt(id_member.getText());
+        String inpUsername = username.getText();
+        String inpNama = nama.getText();
+        String inpEmail = email.getText();
+        String inpAlamat = alamat.getText();
+        String inpNoHp = noHp.getText();
+        String inpProfesi = cmbProfesi.getSelectedItem().toString();
+        String inpJenisKelamin = "";
+        String inpPassword = String.valueOf(password.getPassword());
+        if (radio_laki.isSelected()) {
+            inpJenisKelamin = "Laki-laki";
+        } else if (radio_perempuan.isSelected()) {
+            inpJenisKelamin = "Perempuan";
+        } else {
+            MessageUtil.warning(this, "Pilih jenis kelamin terlebih dahulu");
+            return;
+        }
+        
+    if(inpUsername.isEmpty() ||
+       inpNama.isEmpty() ||
+       inpEmail.isEmpty() ||
+       inpPassword.isEmpty()
+       ){
+        MessageUtil.warning(this, "Semua field wajib di isi");
+        return;
+    }
+    
+    Anggota anggota = new Anggota();
+    
+    anggota.setUsername(inpUsername);
+    anggota.setName(inpNama);
+    anggota.setEmail(inpEmail);
+    anggota.setAlamat(inpAlamat);
+    anggota.setJenisKelamin(inpJenisKelamin);
+    anggota.setNoHp(inpNoHp);
+    anggota.setPassword(inpPassword);
+    anggota.setProfesi(inpProfesi);
+    anggota.setIdAnggota(idAnggota);
+    anggota.setUserId(selectedUserId);
+    boolean result = anggotaController.updateMember(anggota);
+    if(result){
+        tampilData();
+        MessageUtil.success(this, "Data berhasil diubah");
+        resetForm();
+    }else{
+        MessageUtil.success(this, "Data gagal diubah");
+        resetForm();
+    }
+    }//GEN-LAST:event_updateActionPerformed
+
+    private void id_memberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_memberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_id_memberActionPerformed
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
+        // TODO add your handling code here:
+        resetForm();
+    }//GEN-LAST:event_resetActionPerformed
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+        AnggotaController anggotaController = new AnggotaController();
+        String inpUsername = username.getText();
+        String inpNama = nama.getText();
+        String inpEmail = email.getText();
+        String inpAlamat = alamat.getText();
+        String inpNoHp = noHp.getText();
+        String inpProfesi = cmbProfesi.getSelectedItem().toString();
+        String inpJenisKelamin = "";
+        String inpPassword = String.valueOf(password.getPassword());
+        if (radio_laki.isSelected()) {
+            inpJenisKelamin = "Laki-laki";
+        } else if (radio_perempuan.isSelected()) {
+            inpJenisKelamin = "Perempuan";
+        } else {
+            MessageUtil.warning(this, "Pilih jenis kelamin terlebih dahulu");
+            return;
+        }
+        
+    if(inpUsername.isEmpty() ||
+       inpNama.isEmpty() ||
+       inpEmail.isEmpty() ||
+       inpPassword.isEmpty()
+       ){
+        MessageUtil.warning(this, "Semua field wajib di isi");
+        return;
+    }
+    
+    Anggota anggota = new Anggota();
+    anggota.setUsername(inpUsername);
+    anggota.setName(inpNama);
+    anggota.setEmail(inpEmail);
+    anggota.setAlamat(inpAlamat);
+    anggota.setJenisKelamin(inpJenisKelamin);
+    anggota.setNoHp(inpNoHp);
+    anggota.setPassword(inpPassword);
+    anggota.setProfesi(inpProfesi);
+    
+    boolean result = anggotaController.addMember(anggota);
+    
+    if(result){
+        tampilData();
+        MessageUtil.success(this, "Data berhasil ditambah");
+        resetForm();
+    }else{
+        MessageUtil.success(this, "Data gagal ditambah");
+        resetForm();
+    }
+    }//GEN-LAST:event_addActionPerformed
+
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
+        // TODO add your handling code here:
+        nama.requestFocus();
+    }//GEN-LAST:event_usernameActionPerformed
+
+    private void namaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaActionPerformed
+        // TODO add your handling code here:
+        email.requestFocus();
+    }//GEN-LAST:event_namaActionPerformed
+
+    private void emailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emailActionPerformed
+        // TODO add your handling code here:
+        password.requestFocus();
+    }//GEN-LAST:event_emailActionPerformed
+
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
+        // TODO add your handling code here:
+        alamat.requestFocus();
+    }//GEN-LAST:event_passwordActionPerformed
+
+    private void alamatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alamatActionPerformed
+        // TODO add your handling code here:
+        noHp.requestFocus();
+    }//GEN-LAST:event_alamatActionPerformed
+
+    private void usernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFocusLost
+        // TODO add your handling code here:
+        AnggotaController anggotaController = new AnggotaController();
+        boolean duplicateUsername = anggotaController.handlingDuplicateUsername(username.getText());
+        if(duplicateUsername){
+            MessageUtil.warning(this, "Username sudah digunakan");
+            username.setText("");
+            username.requestFocus();
+            return;
+        }
+    }//GEN-LAST:event_usernameFocusLost
+
+    private void emailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFocusLost
+        // TODO add your handling code here:
+        AnggotaController anggotaController = new AnggotaController();
+        boolean duplicateEmail = anggotaController.handlingDuplicateEmail(email.getText());
+        if(duplicateEmail){
+            MessageUtil.warning(this, "Username sudah digunakan");
+            email.setText("");
+            email.requestFocus();
+            return;
+        }
+    }//GEN-LAST:event_emailFocusLost
+
+    private void addFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addFocusLost
+
+    private void table_memberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_memberMouseClicked
+        // TODO add your handling code here:
+         int row
+            = table_member.getSelectedRow();
+
+    if (row < 0) {
+
+        return;
+    }
+    
+    int idAnggota
+            = Integer.parseInt(
+                    table_member.getValueAt(
+                            row,
+                            0
+                    ).toString()
+            );
+    
+    AnggotaController anggotaController = new AnggotaController();
+    Anggota anggota = anggotaController.getMemberById(idAnggota);
+  
+    if(anggota != null){
+        selectedUserId = anggota.getUserId();
+        id_member.setText(
+        String.valueOf(anggota.getIdAnggota())
+        );
+        username.setText(anggota.getUsername());
+        password.setText(anggota.getPassword());
+        nama.setText(anggota.getName());
+        email.setText(anggota.getEmail());
+        if(anggota.getJenisKelamin().equals("laki-laki")){
+            radio_laki.setSelected(true);
+        }else if(anggota.getJenisKelamin().equals("perempuan")){
+            radio_perempuan.setSelected(true);
+        }
+        alamat.setText(anggota.getAlamat());
+        noHp.setText(anggota.getNoHp());
+        cmbProfesi.setSelectedItem(anggota.getProfesi());
+    }
+    }//GEN-LAST:event_table_memberMouseClicked
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
+        // TODO add your handling code here:
+         if (id_member.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih data anggota terlebih dahulu"
+            );
+
+            return;
+        }
+
+        int confirm
+                = MessageUtil.confirm(
+                        this,
+                        "Hapus anggota ini?"
+                );
+
+        if (confirm
+                != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+
+        int userId
+                = selectedUserId;
+
+       AnggotaController anggotaController = new AnggotaController();
+
+        boolean result
+                = anggotaController.deleteMember(userId);
+
+        if (result) {
+
+            MessageUtil.success(
+                    this,
+                    "Anggota berhasil dihapus"
+            );
+
+            tampilData();
+
+            resetForm();
+
+        } else {
+
+            MessageUtil.error(
+                    this,
+                    "Gagal menghapus anggota"
+            );
+        }
+        
+    }//GEN-LAST:event_deleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -372,12 +713,13 @@ public class MemberView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add;
+    private javax.swing.JTextField alamat;
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbProfesi;
+    private javax.swing.JButton delete;
+    private javax.swing.JTextField email;
+    private javax.swing.JTextField id_member;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -389,16 +731,15 @@ public class MemberView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField nama;
+    private javax.swing.JTextField noHp;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JRadioButton radio_laki;
+    private javax.swing.JRadioButton radio_perempuan;
+    private javax.swing.JButton reset;
+    private javax.swing.JTable table_member;
+    private javax.swing.JButton update;
     private javax.swing.JTextField username;
-    private javax.swing.JTextField username1;
-    private javax.swing.JTextField username2;
-    private javax.swing.JTextField username3;
-    private javax.swing.JTextField username4;
-    private javax.swing.JTextField username5;
-    private javax.swing.JTextField username7;
     // End of variables declaration//GEN-END:variables
 }

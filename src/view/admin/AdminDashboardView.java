@@ -3,21 +3,40 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view.admin;
-import javax.swing.*;
+import config.Session;
+import controller.AdminController;
+import model.Admin;
 import utils.FormUtils;
  /*
  * @author Acer
  */
-public class DashboardView extends javax.swing.JFrame {
+public class AdminDashboardView extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardView.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminDashboardView.class.getName());
 
     /**
      * Creates new form DashboardView
      */
-    public DashboardView() {
+    public AdminDashboardView() {
         initComponents();
-        setLocationRelativeTo(null);   
+        setLocationRelativeTo(null); 
+        AdminController adminController
+                = new AdminController();
+
+        Admin admin
+                = adminController.getByUserId(
+                        Session.id
+                );
+
+        if (admin != null) {
+
+            name.setText(
+                    "Nama   : " + admin.getName()
+            );
+            jabatan.setText(
+                    "Jabatan: " + admin.getJabatan()
+            );
+        }
     }
 
     /**
@@ -43,8 +62,10 @@ public class DashboardView extends javax.swing.JFrame {
         btnBorrow = new javax.swing.JButton();
         btnAdmin = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        jabatan = new javax.swing.JTextField();
         btnExit = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        name = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Dashboard Admin");
@@ -122,7 +143,7 @@ public class DashboardView extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(39, 39, 39))
         );
@@ -130,10 +151,10 @@ public class DashboardView extends javax.swing.JFrame {
         btnMember.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnMember.setForeground(new java.awt.Color(51, 51, 51));
         btnMember.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/member.png"))); // NOI18N
+        btnMember.setText("Anggota");
         btnMember.setToolTipText("Kelola Anggota");
         btnMember.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMember.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnMember.setLabel("Members");
         btnMember.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnMember.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -144,10 +165,10 @@ public class DashboardView extends javax.swing.JFrame {
         btnBook.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBook.setForeground(new java.awt.Color(51, 51, 51));
         btnBook.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/books.png"))); // NOI18N
+        btnBook.setText("Buku");
         btnBook.setToolTipText("Kelola Buku");
         btnBook.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBook.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBook.setLabel("Books");
         btnBook.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnBook.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -159,9 +180,9 @@ public class DashboardView extends javax.swing.JFrame {
         btnBorrow.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBorrow.setForeground(new java.awt.Color(51, 51, 51));
         btnBorrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/borrow.png"))); // NOI18N
+        btnBorrow.setText("Peminjaman");
         btnBorrow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBorrow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnBorrow.setLabel("Borrowings");
         btnBorrow.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnBorrow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -172,10 +193,10 @@ public class DashboardView extends javax.swing.JFrame {
         btnAdmin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAdmin.setForeground(new java.awt.Color(51, 51, 51));
         btnAdmin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/admin.png"))); // NOI18N
+        btnAdmin.setText("Admin");
         btnAdmin.setToolTipText("Kelola Admin");
         btnAdmin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdmin.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnAdmin.setLabel("Admins");
         btnAdmin.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnAdmin.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -186,25 +207,30 @@ public class DashboardView extends javax.swing.JFrame {
 
         jPanel5.setBackground(java.awt.Color.white);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel2.setText("Admin: Akbar Maulana Purba");
+        jabatan.setEditable(false);
+        jabatan.setBackground(java.awt.Color.white);
+        jabatan.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jabatan.setForeground(new java.awt.Color(102, 102, 102));
+        jabatan.setText("jabatan muuu");
+        jabatan.setBorder(null);
+        jabatan.setEnabled(false);
+        jabatan.addActionListener(this::jabatanActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jLabel2)
+                .addGap(26, 26, 26)
+                .addComponent(jabatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jabatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         btnExit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -219,35 +245,68 @@ public class DashboardView extends javax.swing.JFrame {
             }
         });
 
+        jPanel6.setBackground(java.awt.Color.white);
+
+        name.setEditable(false);
+        name.setBackground(java.awt.Color.white);
+        name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        name.setForeground(new java.awt.Color(102, 102, 102));
+        name.setText("nama muuu");
+        name.setBorder(null);
+        name.setEnabled(false);
+        name.addActionListener(this::nameActionPerformed);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(8, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnBook, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBorrow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnMember, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(33, 33, 33))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExit))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnBook, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBorrow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnMember, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnMember, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -255,7 +314,7 @@ public class DashboardView extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnBook, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
                 .addComponent(btnExit)
                 .addContainerGap())
         );
@@ -302,21 +361,25 @@ public class DashboardView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
-              
-    }//GEN-LAST:event_btnAdminActionPerformed
-
     private void btnExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseClicked
         System.exit(0);
     }//GEN-LAST:event_btnExitMouseClicked
+
+    private void jabatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jabatanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jabatanActionPerformed
+
+    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
+
+    }//GEN-LAST:event_btnAdminActionPerformed
 
     private void btnAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAdminMouseClicked
         FormUtils.openForm(this, new AdminView());
     }//GEN-LAST:event_btnAdminMouseClicked
 
-    private void btnMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMemberMouseClicked
-        FormUtils.openForm(this, new MemberView());
-    }//GEN-LAST:event_btnMemberMouseClicked
+    private void btnBorrowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBorrowMouseClicked
+        FormUtils.openForm(this, new BorrowView());
+    }//GEN-LAST:event_btnBorrowMouseClicked
 
     private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookActionPerformed
         // TODO add your handling code here:
@@ -326,9 +389,13 @@ public class DashboardView extends javax.swing.JFrame {
         FormUtils.openForm(this, new BookView());
     }//GEN-LAST:event_btnBookMouseClicked
 
-    private void btnBorrowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBorrowMouseClicked
-       FormUtils.openForm(this, new BorrowView());
-    }//GEN-LAST:event_btnBorrowMouseClicked
+    private void btnMemberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMemberMouseClicked
+        FormUtils.openForm(this, new MemberView());
+    }//GEN-LAST:event_btnMemberMouseClicked
+
+    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,7 +419,7 @@ public class DashboardView extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new DashboardView().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new AdminDashboardView().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -363,7 +430,6 @@ public class DashboardView extends javax.swing.JFrame {
     private javax.swing.JButton btnMember;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -372,5 +438,8 @@ public class DashboardView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JTextField jabatan;
+    private javax.swing.JTextField name;
     // End of variables declaration//GEN-END:variables
 }

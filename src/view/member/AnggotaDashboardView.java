@@ -8,14 +8,14 @@ import utils.FormUtils;
  *
  * @author Acer
  */
-public class DashboardView extends javax.swing.JFrame {
+public class AnggotaDashboardView extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardView.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AnggotaDashboardView.class.getName());
 
     /**
      * Creates new form DashboardView
      */
-    public DashboardView() {
+    public AnggotaDashboardView() {
         initComponents();
         setLocationRelativeTo(null);
         
@@ -101,7 +101,7 @@ public class DashboardView extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(195, Short.MAX_VALUE)
+                .addContainerGap(178, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel4)
@@ -119,7 +119,7 @@ public class DashboardView extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addGap(38, 38, 38))
         );
@@ -142,7 +142,7 @@ public class DashboardView extends javax.swing.JFrame {
         btnAbout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAbout.setForeground(new java.awt.Color(51, 51, 51));
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/about.png"))); // NOI18N
-        btnAbout.setText("About");
+        btnAbout.setText("Daftar Pinjam");
         btnAbout.setBorderPainted(false);
         btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAbout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -157,7 +157,7 @@ public class DashboardView extends javax.swing.JFrame {
         btnBorrow.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBorrow.setForeground(new java.awt.Color(51, 51, 51));
         btnBorrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/pinjam.png"))); // NOI18N
-        btnBorrow.setText("Borrowing");
+        btnBorrow.setText("Pinjam Buku");
         btnBorrow.setBorderPainted(false);
         btnBorrow.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBorrow.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -172,7 +172,7 @@ public class DashboardView extends javax.swing.JFrame {
         btnAccount.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAccount.setForeground(new java.awt.Color(51, 51, 51));
         btnAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/account.png"))); // NOI18N
-        btnAccount.setText("Account");
+        btnAccount.setText("Akun");
         btnAccount.setBorderPainted(false);
         btnAccount.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAccount.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -186,7 +186,7 @@ public class DashboardView extends javax.swing.JFrame {
         btnExit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnExit.setForeground(new java.awt.Color(51, 51, 51));
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/close.png"))); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Keluar");
         btnExit.setBorderPainted(false);
         btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -204,16 +204,14 @@ public class DashboardView extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnBorrow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnAbout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(btnAccount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -286,7 +284,7 @@ public class DashboardView extends javax.swing.JFrame {
 
     private void btnHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMouseClicked
         // TODO add your handling code here:
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AnggotaDashboardView());
     }//GEN-LAST:event_btnHomeMouseClicked
 
     private void btnAboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAboutMouseClicked
@@ -326,7 +324,7 @@ public class DashboardView extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new DashboardView().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new AnggotaDashboardView().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

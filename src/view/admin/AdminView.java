@@ -3,21 +3,77 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view.admin;
+
 import utils.FormUtils;
+import controller.AdminController;
+
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import javax.swing.table.DefaultTableModel;
+
+import model.Admin;
+
+import utils.MessageUtil;
+
 /**
  *
  * @author Acer
  */
 public class AdminView extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminView.class.getName());
 
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AdminView.class.getName());
+     private int selectedUserId = 0;
     /**
      * Creates new form AdminView
      */
     public AdminView() {
         initComponents();
         setLocationRelativeTo(null);
+        tampilDataAdmin();
+    }
+
+    private void tampilDataAdmin() {
+
+        DefaultTableModel model
+                = (DefaultTableModel) table_admin.getModel();
+
+        model.setRowCount(0);
+
+        AdminController adminController
+                = new AdminController();
+
+        ArrayList<Admin> list
+                = adminController.getAllAdmin();
+
+        for (Admin admin : list) {
+
+            Object[] row = {
+                admin.getIdAdmin(),
+                admin.getUsername(),
+                admin.getName(),
+                admin.getJabatan()
+
+            };
+
+            model.addRow(row);
+        }
+    }
+
+    private void resetForm() {
+
+        id_admin.setText("");
+
+        username.setText("");
+
+        name.setText("");
+
+        password.setText("");
+
+        jabatan.setSelectedIndex(0);
+
+        table_admin.clearSelection();
     }
 
     /**
@@ -32,22 +88,22 @@ public class AdminView extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table_admin = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        username = new javax.swing.JTextField();
+        name = new javax.swing.JTextField();
+        jabatan = new javax.swing.JComboBox<>();
+        password = new javax.swing.JPasswordField();
+        btn_add = new javax.swing.JButton();
+        btn_update = new javax.swing.JButton();
+        btn_delete = new javax.swing.JButton();
+        reset = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        id_admin = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Manage Admin");
@@ -57,32 +113,33 @@ public class AdminView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Inter", 1, 36)); // NOI18N
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jLabel1.setText("Manage Admin");
+        jLabel1.setText("Kelola Admin");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        table_admin.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "Akbar123", "Akbar Maulana Purba", "Manager", "123456"},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "ID", "Username", "Nama", "Jabatan", "Password"
+                "ID Admin", "Username", "Nama", "Jabatan"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jTable1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jTable1.setShowVerticalLines(true);
-        jScrollPane1.setViewportView(jTable1);
+        table_admin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        table_admin.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table_admin.setShowGrid(true);
+        table_admin.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_adminMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_admin);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Username");
@@ -96,38 +153,55 @@ public class AdminView extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Password");
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        username.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                usernameFocusLost(evt);
+            }
+        });
+        username.addActionListener(this::usernameActionPerformed);
+        username.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                usernameKeyTyped(evt);
+            }
+        });
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        name.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        name.addActionListener(this::nameActionPerformed);
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jabatan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jabatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin Utama", "Pustakawan", "Staff" }));
+        jabatan.addActionListener(this::jabatanActionPerformed);
 
-        jPasswordField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(java.awt.Color.white);
-        jButton1.setText("Add");
-        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btn_add.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_add.setForeground(java.awt.Color.white);
+        btn_add.setText("Add");
+        btn_add.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_add.addActionListener(this::btn_addActionPerformed);
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(java.awt.Color.white);
-        jButton2.setText("Update");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_update.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btn_update.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_update.setForeground(java.awt.Color.white);
+        btn_update.setText("Update");
+        btn_update.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_update.addActionListener(this::btn_updateActionPerformed);
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setForeground(java.awt.Color.white);
-        jButton3.setText("Delete");
-        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_delete.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btn_delete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btn_delete.setForeground(java.awt.Color.white);
+        btn_delete.setText("Delete");
+        btn_delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_delete.addActionListener(this::btn_deleteActionPerformed);
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setForeground(java.awt.Color.white);
-        jButton4.setText("Reset");
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        reset.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        reset.setForeground(java.awt.Color.white);
+        reset.setText("Reset");
+        reset.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reset.addActionListener(this::resetActionPerformed);
 
         btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(153, 153, 153));
@@ -143,8 +217,8 @@ public class AdminView extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("ID");
 
-        jTextField3.setEditable(false);
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        id_admin.setEditable(false);
+        id_admin.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -155,9 +229,9 @@ public class AdminView extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3)
@@ -166,27 +240,26 @@ public class AdminView extends javax.swing.JFrame {
                                     .addComponent(jLabel6))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(id_admin, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jabatan, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(156, 156, 156))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(148, 148, 148)))
                         .addComponent(btnBack)))
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(206, 206, 206)
-                .addComponent(jButton1)
+                .addComponent(btn_add)
                 .addGap(24, 24, 24)
-                .addComponent(jButton2)
+                .addComponent(btn_update)
                 .addGap(24, 24, 24)
-                .addComponent(jButton3)
+                .addComponent(btn_delete)
                 .addGap(26, 26, 26)
-                .addComponent(jButton4)
+                .addComponent(reset)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -201,29 +274,29 @@ public class AdminView extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(jLabel6))
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(id_admin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jabatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(btn_add)
+                    .addComponent(btn_update)
+                    .addComponent(btn_delete)
+                    .addComponent(reset))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -244,12 +317,303 @@ public class AdminView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBackMouseClicked
-        FormUtils.openForm(this, new DashboardView());
+        FormUtils.openForm(this, new AdminDashboardView());
     }//GEN-LAST:event_btnBackMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
+        // TODO add your handling code here:
+        AdminController adminController = new AdminController();
+        String usernameValue
+                = username.getText();
+        String nameValue
+                = name.getText();
+
+        String passwordValue
+                = String.valueOf(
+                        password.getPassword()
+                );
+
+        String jabatanValue
+                = jabatan.getSelectedItem()
+                        .toString();
+
+        if (usernameValue.isEmpty()
+                || nameValue.isEmpty()
+                || passwordValue.isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Lengkapi semua data"
+            );
+
+            return;
+        }
+
+        Admin admin = new Admin();
+        
+        admin.setUsername(
+                usernameValue
+        );
+
+        admin.setName(
+                nameValue
+        );
+
+        admin.setPassword(
+                passwordValue
+        );
+
+        admin.setJabatan(
+                jabatanValue
+        );
+
+      
+        
+        boolean result
+                = adminController.tambahAdmin(
+                        admin
+                );
+
+        if (result) {
+
+            MessageUtil.success(
+                    this,
+                    "Admin berhasil ditambahkan"
+            );
+
+            tampilDataAdmin();
+
+            resetForm();
+
+        } else {
+
+            MessageUtil.error(
+                    this,
+                    "Gagal menambahkan admin"
+            );
+        }
+
+    }//GEN-LAST:event_btn_addActionPerformed
+
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
+        // TODO add your handling code here:
+        if (id_admin.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih data admin terlebih dahulu"
+            );
+
+            return;
+        }
+        AdminController adminController
+                = new AdminController();
+
+        Admin admin = new Admin();
+
+        admin.setIdAdmin(
+                Integer.parseInt(
+                        id_admin.getText()
+                )
+        );
+        admin.setUserId(selectedUserId);
+        admin.setUsername(
+                username.getText()
+        );
+
+        admin.setName(
+                name.getText()
+        );
+
+        admin.setPassword(
+                String.valueOf(
+                        password.getPassword()
+                )
+        );
+
+        admin.setJabatan(
+                jabatan.getSelectedItem()
+                        .toString()
+        );
+        
+        
+
+        boolean result
+                = adminController.updateAdmin(
+                        admin
+                );
+
+        if (result) {
+
+            MessageUtil.success(
+                    this,
+                    "Data admin berhasil diupdate"
+            );
+
+            tampilDataAdmin();
+
+            resetForm();
+
+        } else {
+
+            MessageUtil.error(
+                    this,
+                    "Gagal update admin"
+            );
+        }
+    }//GEN-LAST:event_btn_updateActionPerformed
+
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
+        // TODO add your handling code here:
+        if (id_admin.getText().isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Pilih data admin terlebih dahulu"
+            );
+
+            return;
+        }
+
+        int confirm
+                = MessageUtil.confirm(
+                        this,
+                        "Hapus admin ini?"
+                );
+
+        if (confirm
+                != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+
+        int userId
+                = selectedUserId;
+
+        AdminController adminController
+                = new AdminController();
+
+        boolean result
+                = adminController.deleteAdmin(
+                        userId
+                );
+
+        if (result) {
+
+            MessageUtil.success(
+                    this,
+                    "Admin berhasil dihapus"
+            );
+
+            tampilDataAdmin();
+
+            resetForm();
+
+        } else {
+
+            MessageUtil.error(
+                    this,
+                    "Gagal menghapus admin"
+            );
+        }
+    }//GEN-LAST:event_btn_deleteActionPerformed
+
+    private void table_adminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_adminMouseClicked
+        // TODO add your handling code here:
+         int row
+            = table_admin.getSelectedRow();
+
+    if (row < 0) {
+
+        return;
+    }
+
+    int idAdmin
+            = Integer.parseInt(
+                    table_admin.getValueAt(
+                            row,
+                            0
+                    ).toString()
+            );
+     
+    AdminController adminController
+            = new AdminController();
+
+    Admin admin
+            = adminController.getAdminById(
+                    idAdmin
+            );
+    
+    if (admin != null) {
+
+        selectedUserId
+                = admin.getUserId();
+       
+        id_admin.setText(
+                String.valueOf(
+                        admin.getIdAdmin()
+                )
+        );
+        username.setText(
+                admin.getUsername()
+        );
+
+        name.setText(
+                admin.getName()
+        );
+
+        password.setText(
+                admin.getPassword()
+        );
+
+        jabatan.setSelectedItem(
+                admin.getJabatan()
+        );
+    }
+    }//GEN-LAST:event_table_adminMouseClicked
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
+        // TODO add your handling code here:
+        resetForm();
+    }//GEN-LAST:event_resetActionPerformed
+
+    private void usernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameKeyTyped
+
+    }//GEN-LAST:event_usernameKeyTyped
+
+    private void usernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFocusLost
+        // TODO add your handling code here:
+        AdminController adminController = new AdminController();
+        String usernameValue
+                = username.getText();
+        boolean usernameReady = adminController.handlingDuplicateUsername(usernameValue);
+        if(usernameReady){
+             MessageUtil.warning(
+                    this,
+                    "Username sudah digunakan"
+            );
+             username.setText("");
+             username.requestFocus();
+             return;
+        }
+        
+    }//GEN-LAST:event_usernameFocusLost
+
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
+        // TODO add your handling code here:
+        name.requestFocus();
+    }//GEN-LAST:event_usernameActionPerformed
+
+    private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
+        // TODO add your handling code here:
+        password.requestFocus();
+    }//GEN-LAST:event_nameActionPerformed
+
+    private void jabatanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jabatanActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jabatanActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -268,17 +632,15 @@ public class AdminView extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new AdminView().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btn_add;
+    private javax.swing.JButton btn_delete;
+    private javax.swing.JButton btn_update;
+    private javax.swing.JTextField id_admin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -286,11 +648,13 @@ public class AdminView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox<String> jabatan;
+    private javax.swing.JTextField name;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JButton reset;
+    private javax.swing.JTable table_admin;
+    private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
+
 }

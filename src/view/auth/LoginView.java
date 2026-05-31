@@ -9,8 +9,12 @@ import java.awt.Image;
 import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.UIManager;
-import javax.swing.JOptionPane;
-
+import config.Session;
+import controller.AuthController;
+import utils.MessageUtil;
+import model.User;
+import view.member.AnggotaDashboardView;
+import view.admin.AdminDashboardView;
 /**
  *
  * @author Acer
@@ -24,7 +28,7 @@ public class LoginView extends javax.swing.JFrame {
      */
     public LoginView() {
         initComponents();
-        
+        username.requestFocus();
         password.setEchoChar('•');
         ImageIcon icon = new ImageIcon(
         getClass().getResource("/assets/view.png")
@@ -75,7 +79,7 @@ public class LoginView extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jLabel1.setText("Sign in to your account");
+        jLabel1.setText("Masuk ke Akun Anda");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(51, 51, 51));
@@ -87,11 +91,22 @@ public class LoginView extends javax.swing.JFrame {
 
         username.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         username.setToolTipText("Enter your username");
+        username.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                usernameMouseEntered(evt);
+            }
+        });
+        username.addActionListener(this::usernameActionPerformed);
+        username.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                usernameKeyPressed(evt);
+            }
+        });
 
         login.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         login.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         login.setForeground(new java.awt.Color(255, 255, 255));
-        login.setText("Login");
+        login.setText("Masuk");
         login.setToolTipText("Continue to dashboard");
         login.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         login.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -109,6 +124,12 @@ public class LoginView extends javax.swing.JFrame {
 
         password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         password.setToolTipText("Enter your secret password");
+        password.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                passwordMouseEntered(evt);
+            }
+        });
+        password.addActionListener(this::passwordActionPerformed);
 
         show_password.setBorder(null);
         show_password.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -155,7 +176,7 @@ public class LoginView extends javax.swing.JFrame {
 
         register.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         register.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        register.setText("Register as a member");
+        register.setText("Daftar sebagai anggota");
         register.setToolTipText("Join the library");
         register.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         register.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -173,7 +194,7 @@ public class LoginView extends javax.swing.JFrame {
         btnExit.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnExit.setForeground(new java.awt.Color(51, 51, 51));
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/close.png"))); // NOI18N
-        btnExit.setText("Exit");
+        btnExit.setText("Keluar");
         btnExit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -282,30 +303,70 @@ public class LoginView extends javax.swing.JFrame {
     }//GEN-LAST:event_show_passwordActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        String usernameValue = username.getText();
+       String usernameValue
+            = username.getText();
 
-        String passwordValue = String.valueOf(
-            password.getPassword()
-        );
-
-        if (usernameValue.isEmpty() || passwordValue.isEmpty()) {
-
-            JOptionPane.showMessageDialog(
-                this,
-                "Please fill in all fields",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE
+    String passwordValue
+            = String.valueOf(
+                    password.getPassword()
             );
 
-            return;
+    if (
+        usernameValue.isEmpty() ||
+        passwordValue.isEmpty()
+    ) {
+
+        MessageUtil.warning(
+                this,
+                "Please fill in all fields"
+        );
+
+        return;
+    }
+
+    AuthController authController
+            = new AuthController();
+
+    User user = authController.login(
+            usernameValue,
+            passwordValue
+    );
+
+    if (user != null) {
+
+        Session.id = user.getId();
+
+        Session.username = user.getUsername();
+
+        Session.role = user.getRole();
+
+        MessageUtil.success(
+                this,
+                "Login successful"
+        );
+
+        if (
+            Session.role.equals("admin")
+        ) {
+
+            new AdminDashboardView()
+                    .setVisible(true);
+
+        } else {
+
+            new AnggotaDashboardView()
+                    .setVisible(true);
         }
 
-        JOptionPane.showMessageDialog(
-            this,
-            "Login success",
-            "Success",
-            JOptionPane.INFORMATION_MESSAGE
+        dispose();
+
+    } else {
+
+        MessageUtil.error(
+                this,
+                "Invalid username or password"
         );
+    }
     }//GEN-LAST:event_loginActionPerformed
 
     private void loginMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseExited
@@ -337,6 +398,29 @@ public class LoginView extends javax.swing.JFrame {
     private void loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginMouseClicked
 
     }//GEN-LAST:event_loginMouseClicked
+
+    private void usernameMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usernameMouseEntered
+
+    }//GEN-LAST:event_usernameMouseEntered
+
+    private void passwordMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passwordMouseEntered
+
+    }//GEN-LAST:event_passwordMouseEntered
+
+    private void usernameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameKeyPressed
+        // TODO add your handling code here:
+   
+    }//GEN-LAST:event_usernameKeyPressed
+
+    private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
+        // TODO add your handling code here:
+        password.requestFocus();
+    }//GEN-LAST:event_usernameActionPerformed
+
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
+        // TODO add your handling code here:
+        login.requestFocus();
+    }//GEN-LAST:event_passwordActionPerformed
 
     /**
      * @param args the command line arguments
