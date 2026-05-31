@@ -68,6 +68,8 @@ public class PeminjamanService {
                 idPinjam
         );
     }
-    
+    public Peminjaman getPeminjamanById(int id){
+        return peminjamanDAO.getPeminjamanById(id);
+    }
    
 }

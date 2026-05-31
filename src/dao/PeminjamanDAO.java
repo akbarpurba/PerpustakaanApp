@@ -15,75 +15,124 @@ import model.Peminjaman;
  */
 public class PeminjamanDAO {
     public boolean insert(
-            Peminjaman peminjaman
-    ) {
+        Peminjaman peminjaman
+) {
 
-        try {
+    try {
 
-            Connection conn
-                    = Database.getConnection();
+        Connection conn
+                = Database.getConnection();
 
-            String sql = """
-                INSERT INTO peminjaman(
-                    id_anggota,
-                    id_buku,
-                    tanggal_pinjam,
-                    lama_peminjaman,
-                    tanggal_kembali,
-                    status
-                )
-                VALUES (?, ?, ?, ?, ?, ?)
-            """;
+        String cekStokSql = """
+            SELECT stok
+            FROM buku
+            WHERE id_buku = ?
+        """;
 
-            PreparedStatement pst
-                    = conn.prepareStatement(sql);
+        PreparedStatement cekPst
+                = conn.prepareStatement(
+                        cekStokSql
+                );
 
-            pst.setInt(
-                    1,
-                    peminjaman.getIdAnggota()
-            );
+        cekPst.setInt(
+                1,
+                peminjaman.getIdBuku()
+        );
 
-            pst.setInt(
-                    2,
-                    peminjaman.getIdBuku()
-            );
+        ResultSet rs
+                = cekPst.executeQuery();
 
-            pst.setString(
-                    3,
-                    peminjaman.getTanggalPinjam()
-            );
+        if (!rs.next()) {
 
-            pst.setInt(
-                    4,
-                    peminjaman.getLamaPeminjaman()
-            );
-
-            pst.setString(
-                    5,
-                    peminjaman.getTanggalKembali()
-            );
-
-            pst.setString(
-                    6,
-                    "dipinjam"
-            );
-
-            pst.executeUpdate();
-
-            Database.commit();
-
-            return true;
-
-        } catch (Exception e) {
-
-            Database.rollback();
-
-            e.printStackTrace();
+            return false;
         }
 
-        return false;
+        int stok
+                = rs.getInt("stok");
+
+        if (stok <= 0) {
+
+            return false;
+        }
+
+        String sql = """
+            INSERT INTO peminjaman(
+                id_anggota,
+                id_buku,
+                tanggal_pinjam,
+                lama_peminjaman,
+                tanggal_kembali,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+        """;
+
+        PreparedStatement pst
+                = conn.prepareStatement(sql);
+
+        pst.setInt(
+                1,
+                peminjaman.getIdAnggota()
+        );
+
+        pst.setInt(
+                2,
+                peminjaman.getIdBuku()
+        );
+
+        pst.setString(
+                3,
+                peminjaman.getTanggalPinjam()
+        );
+
+        pst.setInt(
+                4,
+                peminjaman.getLamaPeminjaman()
+        );
+
+        pst.setString(
+                5,
+                peminjaman.getTanggalKembali()
+        );
+
+        pst.setString(
+                6,
+                "dipinjam"
+        );
+
+        pst.executeUpdate();
+
+        String updateStokSql = """
+            UPDATE buku
+            SET stok = stok - 1
+            WHERE id_buku = ?
+        """;
+
+        PreparedStatement updatePst
+                = conn.prepareStatement(
+                        updateStokSql
+                );
+
+        updatePst.setInt(
+                1,
+                peminjaman.getIdBuku()
+        );
+
+        updatePst.executeUpdate();
+
+        Database.commit();
+
+        return true;
+
+    } catch (Exception e) {
+
+        Database.rollback();
+
+        e.printStackTrace();
     }
 
+    return false;
+}
     public ArrayList<Peminjaman> getAll() {
 
         ArrayList<Peminjaman> list
@@ -179,43 +228,116 @@ public class PeminjamanDAO {
     }
 
     public boolean updateStatus(
-            int idPinjam,
-            String status
-    ) {
+        int idPinjam,
+        String status
+) {
 
-        try {
+    try {
 
-            Connection conn
-                    = Database.getConnection();
+        Connection conn
+                = Database.getConnection();
 
-            String sql = """
-                UPDATE peminjaman
-                SET status = ?
-                WHERE id_pinjam = ?
-            """;
+        String getSql = """
+            SELECT
+                id_buku,
+                status
+            FROM peminjaman
+            WHERE id_pinjam = ?
+        """;
 
-            PreparedStatement pst
-                    = conn.prepareStatement(sql);
+        PreparedStatement getPst
+                = conn.prepareStatement(
+                        getSql
+                );
 
-            pst.setString(1, status);
+        getPst.setInt(
+                1,
+                idPinjam
+        );
 
-            pst.setInt(2, idPinjam);
+        ResultSet rs
+                = getPst.executeQuery();
 
-            pst.executeUpdate();
+        int idBuku = 0;
 
-            Database.commit();
+        String oldStatus = "";
 
-            return true;
+        if (rs.next()) {
 
-        } catch (Exception e) {
+            idBuku = rs.getInt(
+                    "id_buku"
+            );
 
-            Database.rollback();
+            oldStatus = rs.getString(
+                    "status"
+            );
 
-            e.printStackTrace();
+        } else {
+
+            return false;
         }
 
-        return false;
+        String updateSql = """
+            UPDATE peminjaman
+            SET status = ?
+            WHERE id_pinjam = ?
+        """;
+
+        PreparedStatement updatePst
+                = conn.prepareStatement(
+                        updateSql
+                );
+
+        updatePst.setString(
+                1,
+                status
+        );
+
+        updatePst.setInt(
+                2,
+                idPinjam
+        );
+
+        updatePst.executeUpdate();
+
+        if (
+            oldStatus.equalsIgnoreCase("dipinjam")
+            &&
+            status.equalsIgnoreCase("dikembalikan")
+        ) {
+
+            String stokSql = """
+                UPDATE buku
+                SET stok = stok + 1
+                WHERE id_buku = ?
+            """;
+
+            PreparedStatement stokPst
+                    = conn.prepareStatement(
+                            stokSql
+                    );
+
+            stokPst.setInt(
+                    1,
+                    idBuku
+            );
+
+            stokPst.executeUpdate();
+        }
+
+        Database.commit();
+
+        return true;
+
+    } catch (Exception e) {
+
+        Database.rollback();
+
+        e.printStackTrace();
     }
+
+    return false;
+}
 
     public boolean delete(
             int idPinjam
@@ -251,5 +373,100 @@ public class PeminjamanDAO {
 
         return false;
     }
-    
+    public Peminjaman getPeminjamanById(
+        int idPinjam
+) {
+
+    Peminjaman peminjaman = null;
+
+    try {
+
+        Connection conn
+                = Database.getConnection();
+
+        String sql = """
+            SELECT
+                peminjaman.*,
+
+                anggota.name,
+                anggota.no_hp,
+
+                buku.judul_buku
+
+            FROM peminjaman
+
+            JOIN anggota
+            ON peminjaman.id_anggota
+            = anggota.id_anggota
+
+            JOIN buku
+            ON peminjaman.id_buku
+            = buku.id_buku
+
+            WHERE id_pinjam = ?
+        """;
+
+        PreparedStatement pst
+                = conn.prepareStatement(sql);
+
+        pst.setInt(
+                1,
+                idPinjam
+        );
+
+        ResultSet rs
+                = pst.executeQuery();
+
+        if (rs.next()) {
+
+            peminjaman = new Peminjaman();
+
+            peminjaman.setIdPinjam(
+                    rs.getInt("id_pinjam")
+            );
+
+            peminjaman.setIdAnggota(
+                    rs.getInt("id_anggota")
+            );
+
+            peminjaman.setIdBuku(
+                    rs.getInt("id_buku")
+            );
+
+            peminjaman.setNama(
+                    rs.getString("name")
+            );
+
+            peminjaman.setNoHp(
+                    rs.getString("no_hp")
+            );
+
+            peminjaman.setJudulBuku(
+                    rs.getString("judul_buku")
+            );
+
+            peminjaman.setTanggalPinjam(
+                    rs.getString("tanggal_pinjam")
+            );
+
+            peminjaman.setLamaPeminjaman(
+                    rs.getInt("lama_peminjaman")
+            );
+
+            peminjaman.setTanggalKembali(
+                    rs.getString("tanggal_kembali")
+            );
+
+            peminjaman.setStatus(
+                    rs.getString("status")
+            );
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+
+    return peminjaman;
+}
 }

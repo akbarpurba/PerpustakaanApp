@@ -231,6 +231,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="tanggalPinjam">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
@@ -337,6 +338,9 @@
               <Color id="Hand Cursor"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="add">
           <Properties>
@@ -368,11 +372,12 @@
             <Component class="javax.swing.JTable" name="table_pinjam">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="6" rowCount="0">
+                  <Table columnCount="7" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Object"/>
                     <Column editable="false" title="Usernama Peminjam" type="java.lang.Object"/>
                     <Column editable="false" title="Judul Buku" type="java.lang.Object"/>
                     <Column editable="false" title="Tanggal Pinjam" type="java.lang.Object"/>
+                    <Column editable="false" title="Lama Peminjaman (Hari)" type="java.lang.Object"/>
                     <Column editable="false" title="Tanggal Kembali" type="java.lang.Object"/>
                     <Column editable="false" title="Status" type="java.lang.Object"/>
                   </Table>
@@ -406,10 +411,7 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value="Dipinjam"/>
-                <StringItem index="1" value="Dikembalikan"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <AuxValues>

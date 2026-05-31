@@ -16,6 +16,8 @@ import utils.MessageUtil;
 import java.time.LocalDate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Acer
@@ -34,6 +36,11 @@ public class BorrowView extends javax.swing.JFrame {
         loadAnggota();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         tanggalPinjam.setText(sdf.format(new Date()));
+        
+        status.removeAllItems();
+        status.addItem("--Pilih Status Peminjaman--");
+        status.addItem("dipinjam");
+        status.addItem("dikembalikan");
     }
     private void loadData(){
         DefaultTableModel model
@@ -48,7 +55,8 @@ public class BorrowView extends javax.swing.JFrame {
                 pinjam.getJudulBuku(),
                 pinjam.getTanggalPinjam(),
                 pinjam.getLamaPeminjaman(),
-                pinjam.getTanggalKembali()
+                pinjam.getTanggalKembali(),
+                pinjam.getStatus()
             };
             model.addRow(row);
         }
@@ -79,8 +87,14 @@ public class BorrowView extends javax.swing.JFrame {
         idPinjam.setText("");
         cmbAnggota.setSelectedIndex(0);
         cmbBuku.setSelectedIndex(0);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        tanggalPinjam.setText(sdf.format(new Date()));
         lamaPinjam.setText("");
         status.setSelectedIndex(0);
+        
+        cmbAnggota.setEnabled(true);
+        cmbBuku.setEnabled(true);
+        lamaPinjam.setEditable(true);
     }
     private String hitungJangkaPinjam(){
 
@@ -164,6 +178,7 @@ public class BorrowView extends javax.swing.JFrame {
         jLabel1.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         jLabel1.setText("Kelola Peminjaman");
 
+        tanggalPinjam.setEditable(false);
         tanggalPinjam.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tanggalPinjam.setToolTipText("Enter your username");
 
@@ -206,6 +221,7 @@ public class BorrowView extends javax.swing.JFrame {
         delete.setForeground(java.awt.Color.white);
         delete.setText("Delete");
         delete.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        delete.addActionListener(this::deleteActionPerformed);
 
         add.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         add.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -219,11 +235,11 @@ public class BorrowView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Usernama Peminjam", "Judul Buku", "Tanggal Pinjam", "Tanggal Kembali", "Status"
+                "ID", "Usernama Peminjam", "Judul Buku", "Tanggal Pinjam", "Lama Peminjaman (Hari)", "Tanggal Kembali", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -245,7 +261,6 @@ public class BorrowView extends javax.swing.JFrame {
         jLabel3.setText("Status");
 
         status.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dipinjam", "Dikembalikan" }));
 
         cmbBuku.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cmbBuku.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
@@ -372,6 +387,37 @@ public class BorrowView extends javax.swing.JFrame {
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
         // TODO add your handling code here:
+        if(cmbAnggota.getSelectedIndex() == 0){
+            MessageUtil.warning(this, "Pilih Anggota Terlebih Dahulu");
+            cmbAnggota.requestFocus();
+            return;
+        }
+        else if(cmbBuku.getSelectedIndex() == 0){
+            MessageUtil.warning(this, "Pilih Buku Terlebih Dahulu");
+            cmbBuku.requestFocus();
+            return;
+        }
+        else if(lamaPinjam.getText().isEmpty()){
+            MessageUtil.warning(this, "Jangka Waktu Pinjam Harus Diisi");
+            lamaPinjam.requestFocus();
+            return;
+        }
+  
+        
+        Peminjaman peminjaman = new Peminjaman();
+        peminjaman.setIdPinjam(Integer.parseInt(idPinjam.getText()));
+        peminjaman.setStatus(status.getSelectedItem().toString());
+        
+        PeminjamanController peminjamanCon = new PeminjamanController();
+        boolean hasil = peminjamanCon.updateStatus(peminjaman.getIdPinjam(), peminjaman.getStatus());
+        if(hasil){
+            loadData();
+            MessageUtil.success(this, "Berhasil Mengubah Status");
+            resetForm();  
+    }else{
+            MessageUtil.success(this, "Gagal Mengubah Status");
+            resetForm(); 
+        }
     }//GEN-LAST:event_updateActionPerformed
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
@@ -389,6 +435,11 @@ public class BorrowView extends javax.swing.JFrame {
         else if(lamaPinjam.getText().isEmpty()){
             MessageUtil.warning(this, "Jangka Waktu Pinjam Harus Diisi");
             lamaPinjam.requestFocus();
+            return;
+        }
+        else if (status.getSelectedIndex() == 0){
+            MessageUtil.warning(this, "Pilih Status Peminjaman");
+            status.requestFocus();
             return;
         }
         AnggotaController anggotaController = new AnggotaController();
@@ -438,6 +489,10 @@ public class BorrowView extends javax.swing.JFrame {
 
     private void table_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_pinjamMouseClicked
         // TODO add your handling code here:
+        cmbAnggota.setEnabled(false);
+        cmbBuku.setEnabled(false);
+        lamaPinjam.setEditable(false);
+        
         int row = table_pinjam.getSelectedRow();
         if(row < 0){
             return;
@@ -445,8 +500,55 @@ public class BorrowView extends javax.swing.JFrame {
         
         int id_pinjam = Integer.parseInt(table_pinjam.getValueAt(row, 0).toString());
         PeminjamanController peminjamanController = new PeminjamanController();
-        Peminjaman peminjaman;
+        Peminjaman peminjaman = peminjamanController.getPeminjamanById(id_pinjam);
+        BukuController bukuController = new BukuController();
+        AnggotaController anggotaController = new AnggotaController();
+        Anggota anggota = anggotaController.getMemberById(peminjaman.getIdAnggota());
+        Buku buku = bukuController.getBukuById(peminjaman.getIdBuku());
+        
+        if(peminjaman != null){
+            idPinjam.setText(String.valueOf(peminjaman.getIdPinjam()));
+            cmbAnggota.setSelectedItem(anggota.getUsername());
+            cmbBuku.setSelectedItem(buku.getJudulBuku());
+            tanggalPinjam.setText(peminjaman.getTanggalPinjam());
+            lamaPinjam.setText(String.valueOf(peminjaman.getLamaPeminjaman()));
+            status.setSelectedItem(peminjaman.getStatus());
+        }
     }//GEN-LAST:event_table_pinjamMouseClicked
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
+        // TODO add your handling code here:
+        Peminjaman peminjaman = new Peminjaman();
+        PeminjamanController peminjamanController = new PeminjamanController();
+        
+        if(idPinjam.getText().isEmpty()){
+            MessageUtil.warning(this, "Silahkan Pilih Data Yang ingin Dihapus");
+            return;
+        }
+        int confirm
+                = MessageUtil.confirm(
+                        this,
+                        "Hapus peminjaman ini?"
+                );
+
+        if (confirm
+                != JOptionPane.YES_OPTION) {
+
+            return;
+        }
+        
+        peminjaman.setIdPinjam(Integer.parseInt(idPinjam.getText()));
+        boolean hasil = peminjamanController.hapusPeminjaman(peminjaman.getIdPinjam());
+        if(hasil){
+            loadData();
+            MessageUtil.success(this, "Data Berhasil Dihapus");
+            resetForm();
+        }else{
+            MessageUtil.error(this, "Data Gagal Dihapus");
+            resetForm();
+        }
+        
+    }//GEN-LAST:event_deleteActionPerformed
 
     /**
      * @param args the command line arguments

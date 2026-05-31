@@ -51,4 +51,8 @@ public class PeminjamanController {
                         idPinjam
                 );
     }
+    
+    public Peminjaman getPeminjamanById(int id){
+        return peminjamanService.getPeminjamanById(id);
+    }
 }
