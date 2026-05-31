@@ -13,6 +13,9 @@ import javax.swing.table.DefaultTableModel;
 import model.Anggota;
 import controller.AnggotaController;
 import utils.MessageUtil;
+import java.time.LocalDate;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  *
  * @author Acer
@@ -20,7 +23,7 @@ import utils.MessageUtil;
 public class BorrowView extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BorrowView.class.getName());
-
+    int selectedId = 0;
     /**
      * Creates new form BorrowView
      */
@@ -29,6 +32,8 @@ public class BorrowView extends javax.swing.JFrame {
         loadBuku();
         loadData();
         loadAnggota();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        tanggalPinjam.setText(sdf.format(new Date()));
     }
     private void loadData(){
         DefaultTableModel model
@@ -66,7 +71,7 @@ public class BorrowView extends javax.swing.JFrame {
         cmbAnggota.addItem("--Pilih Anggota--");
         
         for(Anggota anggota : list){
-            cmbAnggota.addItem(anggota.getName());
+            cmbAnggota.addItem(anggota.getUsername());
         }
     }
     
@@ -74,7 +79,26 @@ public class BorrowView extends javax.swing.JFrame {
         idPinjam.setText("");
         cmbAnggota.setSelectedIndex(0);
         cmbBuku.setSelectedIndex(0);
-    
+        lamaPinjam.setText("");
+        status.setSelectedIndex(0);
+    }
+    private String hitungJangkaPinjam(){
+
+        int lama = Integer.parseInt(
+                lamaPinjam.getText()
+        );
+
+        LocalDate tanggal_pinjam
+                = LocalDate.parse(
+                        tanggalPinjam.getText()
+                );
+
+        LocalDate tanggalKembali
+                = tanggal_pinjam.plusDays(lama);
+
+        String tgl_kembali = tanggalKembali.toString();
+        return tgl_kembali;
+
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -161,7 +185,7 @@ public class BorrowView extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel2.setText("Nama Anggota");
+        jLabel2.setText("Username Anggota");
 
         update.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         update.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -195,7 +219,7 @@ public class BorrowView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nama Peminjam", "Judul Buku", "Tanggal Pinjam", "Tanggal Kembali", "Status"
+                "ID", "Usernama Peminjam", "Judul Buku", "Tanggal Pinjam", "Tanggal Kembali", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -209,6 +233,11 @@ public class BorrowView extends javax.swing.JFrame {
         table_pinjam.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         table_pinjam.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         table_pinjam.setShowGrid(true);
+        table_pinjam.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_pinjamMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table_pinjam);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -349,14 +378,45 @@ public class BorrowView extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(cmbAnggota.getSelectedIndex() == 0){
             MessageUtil.warning(this, "Pilih Anggota Terlebih Dahulu");
+            cmbAnggota.requestFocus();
+            return;
         }
         else if(cmbBuku.getSelectedIndex() == 0){
             MessageUtil.warning(this, "Pilih Buku Terlebih Dahulu");
+            cmbBuku.requestFocus();
+            return;
         }
-
-        Peminjaman peminjaman = new Peminjaman();
-       
+        else if(lamaPinjam.getText().isEmpty()){
+            MessageUtil.warning(this, "Jangka Waktu Pinjam Harus Diisi");
+            lamaPinjam.requestFocus();
+            return;
+        }
+        AnggotaController anggotaController = new AnggotaController();
+        BukuController bukuController = new BukuController();
         
+        int id_anggota = anggotaController.getIdByUsername(cmbAnggota.getSelectedItem().toString());
+        int id_buku = bukuController.getIdByJudul(cmbBuku.getSelectedItem().toString());
+        String tanggal_kembali = hitungJangkaPinjam();
+        
+        Peminjaman peminjaman = new Peminjaman();
+        peminjaman.setIdAnggota(id_anggota);
+        peminjaman.setIdBuku(id_buku);
+        peminjaman.setTanggalPinjam(tanggalPinjam.getText());
+        peminjaman.setLamaPeminjaman(Integer.parseInt(lamaPinjam.getText()));
+        peminjaman.setTanggalKembali(tanggal_kembali);
+        peminjaman.setStatus(status.getSelectedItem().toString());
+        
+        PeminjamanController peminjamanController = new PeminjamanController();
+        boolean hasil = peminjamanController.pinjamBuku(peminjaman);
+        
+        if(hasil){
+            loadData();
+            MessageUtil.success(this, "Berhasil Meminjam Buku");
+            resetForm();
+        }else{
+            MessageUtil.error(this, "Gagal Meminjam Buku");
+            resetForm();
+        }
     }//GEN-LAST:event_addActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
@@ -375,6 +435,18 @@ public class BorrowView extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_lamaPinjamKeyTyped
+
+    private void table_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_pinjamMouseClicked
+        // TODO add your handling code here:
+        int row = table_pinjam.getSelectedRow();
+        if(row < 0){
+            return;
+        }
+        
+        int id_pinjam = Integer.parseInt(table_pinjam.getValueAt(row, 0).toString());
+        PeminjamanController peminjamanController = new PeminjamanController();
+        Peminjaman peminjaman;
+    }//GEN-LAST:event_table_pinjamMouseClicked
 
     /**
      * @param args the command line arguments

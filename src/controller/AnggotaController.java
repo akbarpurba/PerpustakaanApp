@@ -62,4 +62,7 @@ public Anggota getMemberById(int id_anggota){
 public boolean deleteMember(int user_id){
     return anggotaService.deleteMember(user_id);
 }
+public int getIdByUsername(String username){
+    return anggotaService.getIdByUsername(username);
+}
 }

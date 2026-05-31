@@ -306,4 +306,45 @@ public class BukuDAO {
 
     return buku;
 }
+    
+    public int getIdByJudul(
+        String judul
+) {
+
+    try {
+
+        Connection conn =
+                Database.getConnection();
+
+        String sql = """
+            SELECT id_buku
+            FROM buku
+            WHERE judul_buku = ?
+        """;
+
+        PreparedStatement pst =
+                conn.prepareStatement(sql);
+
+        pst.setString(
+                1,
+                judul
+        );
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        if (rs.next()) {
+
+            return rs.getInt(
+                    "id_buku"
+            );
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+
+    return 0;
+}
 }

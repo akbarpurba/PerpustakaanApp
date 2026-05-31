@@ -62,4 +62,8 @@ public class BukuService {
     public Buku getBukuById(int id_buku){
         return bukuDAO.getBukuById(id_buku);
     }
+    
+    public int getIdByBuku(String judul){
+        return bukuDAO.getIdByJudul(judul);
+    }
 }

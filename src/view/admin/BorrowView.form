@@ -278,7 +278,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="33" red="33" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nama Anggota"/>
+            <Property name="text" type="java.lang.String" value="Username Anggota"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="update">
@@ -370,7 +370,7 @@
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="6" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Object"/>
-                    <Column editable="false" title="Nama Peminjam" type="java.lang.Object"/>
+                    <Column editable="false" title="Usernama Peminjam" type="java.lang.Object"/>
                     <Column editable="false" title="Judul Buku" type="java.lang.Object"/>
                     <Column editable="false" title="Tanggal Pinjam" type="java.lang.Object"/>
                     <Column editable="false" title="Tanggal Kembali" type="java.lang.Object"/>
@@ -383,6 +383,9 @@
                 <Property name="selectionMode" type="int" value="1"/>
                 <Property name="showGrid" type="boolean" value="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="table_pinjamMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

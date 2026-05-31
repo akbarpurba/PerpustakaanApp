@@ -49,4 +49,7 @@ public class BukuController {
     public Buku getBukuById(int id_buku){
         return bukuService.getBukuById(id_buku);
     }
+    public int getIdByJudul(String judul){
+        return bukuService.getIdByBuku(judul);
+    }
 }

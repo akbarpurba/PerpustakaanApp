@@ -808,4 +808,48 @@ public Anggota getMemberById(
 
     return anggota;
 }
+public int getIdByUsername(
+        String username
+) {
+
+    try {
+
+        Connection conn =
+                Database.getConnection();
+
+        String sql = """
+            SELECT anggota.id_anggota
+            FROM anggota
+
+            JOIN users
+            ON anggota.user_id = users.id
+
+            WHERE users.username = ?
+        """;
+
+        PreparedStatement pst =
+                conn.prepareStatement(sql);
+
+        pst.setString(
+                1,
+                username
+        );
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        if (rs.next()) {
+
+            return rs.getInt(
+                    "id_anggota"
+            );
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+
+    return 0;
+}
 }

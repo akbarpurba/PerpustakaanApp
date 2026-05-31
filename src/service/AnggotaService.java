@@ -74,4 +74,8 @@ public Anggota getMember(int id_member){
 public boolean deleteMember(int user_id){
     return anggotaDAO.delete(user_id);
 }
+
+public int getIdByUsername(String username){
+    return anggotaDAO.getIdByUsername(username);
+}
 }
