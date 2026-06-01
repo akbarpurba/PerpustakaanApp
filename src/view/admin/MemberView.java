@@ -12,6 +12,7 @@ import model.Anggota;
 import javax.swing.ButtonGroup;
 import utils.MessageUtil;
 import javax.swing.JOptionPane;
+import utils.TableUtils;
 
 /**
  *
@@ -33,7 +34,7 @@ public class MemberView extends javax.swing.JFrame {
         genderGroup.add(radio_laki);
         genderGroup.add(radio_perempuan);
         tampilData();
-        
+        TableUtils.setTableStyle(table_member);
     }
 
     private void tampilData() {

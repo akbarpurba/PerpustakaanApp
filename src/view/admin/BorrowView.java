@@ -16,7 +16,7 @@ import utils.MessageUtil;
 import java.time.LocalDate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
+import utils.TableUtils;
 import javax.swing.JOptionPane;
 /**
  *
@@ -33,6 +33,7 @@ public class BorrowView extends javax.swing.JFrame {
         initComponents();
         loadBuku();
         loadData();
+        TableUtils.setTableStyle(table_pinjam);
         loadAnggota();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         tanggalPinjam.setText(sdf.format(new Date()));

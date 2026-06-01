@@ -8,7 +8,7 @@ import model.Buku;
 import controller.BukuController;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import javax.swing.ButtonGroup;
+import utils.TableUtils;
 import utils.MessageUtil;
 import javax.swing.JOptionPane;
 /**
@@ -25,6 +25,7 @@ public class BookView extends javax.swing.JFrame {
     public BookView() {
         initComponents();
         tampilData();
+        TableUtils.setTableStyle(table_buku);
     }
     
     

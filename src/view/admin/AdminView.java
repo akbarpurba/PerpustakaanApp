@@ -5,6 +5,7 @@
 package view.admin;
 
 import utils.FormUtils;
+import utils.TableUtils;
 import controller.AdminController;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class AdminView extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         tampilDataAdmin();
+        TableUtils.setTableStyle(table_admin);
     }
 
     private void tampilDataAdmin() {
