@@ -281,15 +281,22 @@ Shift + F6
 
 ## 📸 Screenshot
 
-Tambahkan screenshot aplikasi di sini.
+### Login
 
-```text
-docs/
-├── login.png
-├── dashboard-admin.png
-├── data-buku.png
-└── peminjaman.png
-```
+![Login](docs/login.png)
+
+### Dashboard Admin
+
+![Dashboard Admin](docs/dashboard-admin.png)
+
+### Kelola Buku
+
+![Kelola Buku](docs/data-buku.png)
+
+### Peminjaman Buku
+
+![Peminjaman Buku](docs/peminjaman.png)
+
 
 ---
 
