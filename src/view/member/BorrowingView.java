@@ -13,14 +13,18 @@ import controller.AnggotaController;
 import controller.PeminjamanController;
 import model.Anggota;
 import config.Session;
+import controller.BukuController;
+import java.util.ArrayList;
+import model.Buku;
 import utils.MessageUtil;
 import model.Peminjaman;
+
 /**
  *
  * @author Acer
  */
 public class BorrowingView extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BorrowingView.class.getName());
 
     /**
@@ -33,31 +37,48 @@ public class BorrowingView extends javax.swing.JFrame {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         tanggalPinjam.setText(sdf.format(new Date()));
         loadProfile();
+        loadBuku();
     }
-    
+
     private void loadProfile() {
 
-    AnggotaController anggotaController
-            = new AnggotaController();
+        AnggotaController anggotaController
+                = new AnggotaController();
 
-    Anggota anggota
-            = anggotaController.getProfile(
-                    Session.id
+        Anggota anggota
+                = anggotaController.getProfile(
+                        Session.id
+                );
+
+        if (anggota != null) {
+
+            nama.setText(
+                    anggota.getName()
             );
 
-    if (anggota != null) {
-
-        nama.setText(
-                anggota.getName()
-        );
-
-        noHp.setText(
-                anggota.getNoHp()
-        );
+            noHp.setText(
+                    anggota.getNoHp()
+            );
+        }
     }
-}
+     
+    private void loadBuku(){
+        BukuController bukuController = new BukuController();
+        ArrayList<Buku> list = bukuController.getAllBuku();
+        judulBuku.removeAllItems();
+        judulBuku.addItem("-- Pilih Buku --");
+        
+        for(Buku buku : list){
+            judulBuku.addItem(buku.getJudulBuku());
+        }
+    }
     
-    
+    private void resetForm(){
+        judulBuku.setSelectedIndex(0);
+        lamaPinjam.setText("");
+        tanggalKembali.setText("");
+        judulBuku.requestFocus();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -541,15 +562,16 @@ public class BorrowingView extends javax.swing.JFrame {
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
+        resetForm();
     }//GEN-LAST:event_resetActionPerformed
 
     private void lamaPinjamKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lamaPinjamKeyTyped
         // TODO add your handling code here:
-         char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
 
-        if (!Character.isDigit(c) 
-            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
-            && c != java.awt.event.KeyEvent.VK_DELETE) {
+        if (!Character.isDigit(c)
+                && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+                && c != java.awt.event.KeyEvent.VK_DELETE) {
 
             evt.consume();
         }
@@ -557,14 +579,14 @@ public class BorrowingView extends javax.swing.JFrame {
 
     private void noHpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_noHpKeyTyped
         // TODO add your handling code here:
-     char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
 
-        if (!Character.isDigit(c) 
-            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
-            && c != java.awt.event.KeyEvent.VK_DELETE) {
+        if (!Character.isDigit(c)
+                && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+                && c != java.awt.event.KeyEvent.VK_DELETE) {
 
             evt.consume();
-        }   
+        }
     }//GEN-LAST:event_noHpKeyTyped
 
     private void namaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaActionPerformed
@@ -584,28 +606,28 @@ public class BorrowingView extends javax.swing.JFrame {
 
     private void lamaPinjamKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lamaPinjamKeyReleased
         // TODO add your handling code here:
-         try {
+        try {
 
-        int lama = Integer.parseInt(
-                lamaPinjam.getText()
-        );
+            int lama = Integer.parseInt(
+                    lamaPinjam.getText()
+            );
 
-        LocalDate tanggal_pinjam
-                = LocalDate.parse(
-                        tanggalPinjam.getText()
-                );
+            LocalDate tanggal_pinjam
+                    = LocalDate.parse(
+                            tanggalPinjam.getText()
+                    );
 
-        LocalDate tanggal_kembali
-                = tanggal_pinjam.plusDays(lama);
+            LocalDate tanggal_kembali
+                    = tanggal_pinjam.plusDays(lama);
 
-        tanggalKembali.setText(
-                tanggal_kembali.toString()
-        );
+            tanggalKembali.setText(
+                    tanggal_kembali.toString()
+            );
 
-    } catch (Exception e) {
+        } catch (Exception e) {
 
-        tanggalKembali.setText("");
-    }
+            tanggalKembali.setText("");
+        }
     }//GEN-LAST:event_lamaPinjamKeyReleased
 
     /**

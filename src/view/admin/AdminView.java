@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Admin;
 
 import utils.MessageUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -334,6 +335,11 @@ public class AdminView extends javax.swing.JFrame {
                 = String.valueOf(
                         password.getPassword()
                 );
+        String hashedPassword =
+            BCrypt.hashpw(
+                    passwordValue,
+                    BCrypt.gensalt()
+            );
 
         String jabatanValue
                 = jabatan.getSelectedItem()
@@ -362,9 +368,9 @@ public class AdminView extends javax.swing.JFrame {
         );
 
         admin.setPassword(
-                passwordValue
+                hashedPassword
         );
-
+        
         admin.setJabatan(
                 jabatanValue
         );
@@ -427,10 +433,15 @@ public class AdminView extends javax.swing.JFrame {
                 name.getText()
         );
 
-        admin.setPassword(
-                String.valueOf(
+        String hashedPassword =
+            BCrypt.hashpw(
+                    String.valueOf(
                         password.getPassword()
-                )
+                ),
+                    BCrypt.gensalt()
+            );
+        admin.setPassword(
+                hashedPassword
         );
 
         admin.setJabatan(
@@ -562,10 +573,6 @@ public class AdminView extends javax.swing.JFrame {
 
         name.setText(
                 admin.getName()
-        );
-
-        password.setText(
-                admin.getPassword()
         );
 
         jabatan.setSelectedItem(

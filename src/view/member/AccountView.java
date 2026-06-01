@@ -9,13 +9,15 @@ import controller.AnggotaController;
 import model.Anggota;
 import config.Session;
 import javax.swing.ButtonGroup;
+import org.mindrot.jbcrypt.BCrypt;
 import utils.MessageUtil;
+
 /**
  *
  * @author Acer
  */
 public class AccountView extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AccountView.class.getName());
 
     /**
@@ -31,62 +33,55 @@ public class AccountView extends javax.swing.JFrame {
 
         group.add(radio_perempuan);
     }
-    
+
     private void loadProfile() {
         AnggotaController anggotaController
-        = new AnggotaController();
+                = new AnggotaController();
 
-Anggota anggota
-        = anggotaController.getProfile(
-                Session.id
-        );
+        Anggota anggota
+                = anggotaController.getProfile(
+                        Session.id
+                );
 
-if (anggota != null) {
+        if (anggota != null) {
 
-    username.setText(
-            anggota.getUsername()
-    );
+            username.setText(
+                    anggota.getUsername()
+            );
 
-    name.setText(
-            anggota.getName()
-    );
+            name.setText(
+                    anggota.getName()
+            );
 
-    email.setText(
-            anggota.getEmail()
-    );
+            email.setText(
+                    anggota.getEmail()
+            );
 
-    password.setText(
-            anggota.getPassword()
-    );
+            alamat.setText(
+                    anggota.getAlamat()
+            );
 
-    alamat.setText(
-            anggota.getAlamat()
-    );
+            no_hp.setText(
+                    anggota.getNoHp()
+            );
 
-    no_hp.setText(
-            anggota.getNoHp()
-    );
+            profesi.setSelectedItem(
+                    anggota.getProfesi()
+            );
 
-    profesi.setSelectedItem(
-            anggota.getProfesi()
-    );
+            if (anggota.getJenisKelamin()
+                    .equals("laki-laki")) {
 
-    if (
-        anggota.getJenisKelamin()
-                .equals("laki-laki")
-    ) {
+                radio_laki.setSelected(true);
 
-        radio_laki.setSelected(true);
+            } else if (anggota.getJenisKelamin()
+                    .equals("perempuan")) {
 
-    } else if (
-        anggota.getJenisKelamin()
-                .equals("perempuan")
-    ) {
-
-        radio_perempuan.setSelected(true);
+                radio_perempuan.setSelected(true);
+            }
+        }
     }
-}
-}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -558,95 +553,99 @@ if (anggota != null) {
     }//GEN-LAST:event_nameKeyTyped
 
     private void alamatKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_alamatKeyTyped
-       
+
     }//GEN-LAST:event_alamatKeyTyped
 
     private void no_hpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_no_hpKeyTyped
         // TODO add your handling code here:
-         // TODO add your handling code here:
+        // TODO add your handling code here:
         char c = evt.getKeyChar();
 
         if (!Character.isDigit(c)
-            && c != java.awt.event.KeyEvent.VK_BACK_SPACE
-            && c != java.awt.event.KeyEvent.VK_DELETE) {
+                && c != java.awt.event.KeyEvent.VK_BACK_SPACE
+                && c != java.awt.event.KeyEvent.VK_DELETE) {
 
             evt.consume();
         }
     }//GEN-LAST:event_no_hpKeyTyped
 
     private void ubahDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahDataActionPerformed
-         String jenisKelaminValue = "";
+        String jenisKelaminValue = "";
 
-    if (radio_laki.isSelected()) {
+        if (radio_laki.isSelected()) {
 
-        jenisKelaminValue = "laki-laki";
+            jenisKelaminValue = "laki-laki";
 
-    } else if (radio_perempuan.isSelected()) {
+        } else if (radio_perempuan.isSelected()) {
 
-        jenisKelaminValue = "perempuan";
-    }
+            jenisKelaminValue = "perempuan";
+        }
 
-    Anggota anggota = new Anggota();
+        Anggota anggota = new Anggota();
 
-    anggota.setUserId(Session.id);
+        anggota.setUserId(Session.id);
 
-    anggota.setUsername(
-            username.getText().trim()
-    );
+        anggota.setUsername(
+                username.getText().trim()
+        );
+        String hashedPassword
+                = BCrypt.hashpw(
+                        String.valueOf(
+                                password.getPassword()
+                        ).trim(),
+                        BCrypt.gensalt()
+                );
+        anggota.setPassword(
+                hashedPassword
+        );
 
-    anggota.setPassword(
-            String.valueOf(
-                    password.getPassword()
-            ).trim()
-    );
+        anggota.setName(
+                name.getText().trim()
+        );
 
-    anggota.setName(
-            name.getText().trim()
-    );
+        anggota.setEmail(
+                email.getText().trim()
+        );
 
-    anggota.setEmail(
-            email.getText().trim()
-    );
+        anggota.setAlamat(
+                alamat.getText().trim()
+        );
 
-    anggota.setAlamat(
-            alamat.getText().trim()
-    );
+        anggota.setNoHp(
+                no_hp.getText().trim()
+        );
 
-    anggota.setNoHp(
-            no_hp.getText().trim()
-    );
+        anggota.setJenisKelamin(
+                jenisKelaminValue
+        );
 
-    anggota.setJenisKelamin(
-            jenisKelaminValue
-    );
+        anggota.setProfesi(
+                profesi.getSelectedItem()
+                        .toString()
+        );
 
-    anggota.setProfesi(
-            profesi.getSelectedItem()
-                    .toString()
-    );
+        AnggotaController anggotaController
+                = new AnggotaController();
 
-    AnggotaController anggotaController
-            = new AnggotaController();
+        boolean success
+                = anggotaController.updateProfile(
+                        anggota
+                );
 
-    boolean success
-            = anggotaController.updateProfile(
-                    anggota
+        if (success) {
+
+            MessageUtil.success(
+                    this,
+                    "Profile updated successfully"
             );
 
-    if (success) {
+        } else {
 
-        MessageUtil.success(
-                this,
-                "Profile updated successfully"
-        );
-
-    } else {
-
-        MessageUtil.error(
-                this,
-                "Failed to update profile"
-        );
-    }
+            MessageUtil.error(
+                    this,
+                    "Failed to update profile"
+            );
+        }
     }//GEN-LAST:event_ubahDataActionPerformed
 
     private void profesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profesiActionPerformed
@@ -660,17 +659,17 @@ if (anggota != null) {
 
     private void emailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFocusLost
         // TODO add your handling code here:
-    
-       AnggotaController anggotaController = new AnggotaController();
-       int user_id = Session.id;
-       boolean duplicateEmail = anggotaController.handlingEmailUpdate(email.getText(), user_id);
-       if(duplicateEmail){
-           MessageUtil.warning(this, "Email is already in use");
-           loadProfile();
-           email.requestFocus();
-           return;
-       }
-      
+
+        AnggotaController anggotaController = new AnggotaController();
+        int user_id = Session.id;
+        boolean duplicateEmail = anggotaController.handlingEmailUpdate(email.getText(), user_id);
+        if (duplicateEmail) {
+            MessageUtil.warning(this, "Email is already in use");
+            loadProfile();
+            email.requestFocus();
+            return;
+        }
+
     }//GEN-LAST:event_emailFocusLost
 
     private void usernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFocusLost

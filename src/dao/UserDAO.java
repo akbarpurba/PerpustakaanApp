@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 /**
  *
  * @author Acer
@@ -51,51 +52,69 @@ public class UserDAO {
         return generatedId;
     }
      
-     public User login(
+    public User login(
         String username,
         String password
 ) {
 
-    User user = null;
-
     try {
 
-        Connection conn = Database.getConnection();
+        Connection conn =
+                Database.getConnection();
 
         String sql = """
-            SELECT * FROM users
+            SELECT *
+            FROM users
             WHERE username = ?
-            AND password = ?
         """;
 
-        PreparedStatement pst
-                = conn.prepareStatement(sql);
+        PreparedStatement pst =
+                conn.prepareStatement(sql);
 
-        pst.setString(1, username);
-        pst.setString(2, password);
+        pst.setString(
+                1,
+                username
+        );
 
-        ResultSet rs = pst.executeQuery();
+        ResultSet rs =
+                pst.executeQuery();
 
         if (rs.next()) {
 
-            user = new User();
+            String hashedPassword =
+                    rs.getString("password");
 
-            user.setId(rs.getInt("id"));
+            if (
+                BCrypt.checkpw(
+                        password,
+                        hashedPassword
+                )
+            ) {
 
-            user.setUsername(
-                    rs.getString("username")
-            );
+                User user = new User();
 
-            user.setRole(
-                    rs.getString("role")
-            );
+                user.setId(
+                        rs.getInt("id")
+                );
+
+                user.setUsername(
+                        rs.getString("username")
+                );
+
+                user.setRole(
+                        rs.getString("role")
+                );
+
+                return user;
+            }
         }
 
     } catch (Exception e) {
+
         e.printStackTrace();
     }
 
-    return user;
+    return null;
 }
      
  public boolean isUsernameExists(

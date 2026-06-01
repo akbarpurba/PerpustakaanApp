@@ -7,6 +7,7 @@ import dao.AnggotaDAO;
 import dao.UserDAO;
 import model.Anggota;
 import model.User;
+import org.mindrot.jbcrypt.BCrypt;
 /**
  *
  * @author Acer
@@ -16,7 +17,7 @@ public class AuthService {
 
     private final AnggotaDAO anggotaDAO = new AnggotaDAO();
 
-    public String registerAnggota(
+   public String registerAnggota(
         String username,
         String password,
         String name,
@@ -34,13 +35,20 @@ public class AuthService {
         return "Username already exists";
     }
 
+    String hashedPassword =
+            BCrypt.hashpw(
+                    password,
+                    BCrypt.gensalt()
+            );
+
     User user = new User(
             username,
-            password,
+            hashedPassword,
             "anggota"
     );
 
-    int userId = userDAO.insert(user);
+    int userId =
+            userDAO.insert(user);
 
     if (userId == 0) {
 
@@ -57,8 +65,8 @@ public class AuthService {
             profesi
     );
 
-    boolean success
-            = anggotaDAO.insert(anggota);
+    boolean success =
+            anggotaDAO.insert(anggota);
 
     if (!success) {
 
@@ -67,6 +75,8 @@ public class AuthService {
 
     return "success";
 }
+   
+   
     
    public User login(
         String username,

@@ -13,7 +13,7 @@ import javax.swing.ButtonGroup;
 import utils.MessageUtil;
 import javax.swing.JOptionPane;
 import utils.TableUtils;
-
+import org.mindrot.jbcrypt.BCrypt;
 /**
  *
  * @author Acer
@@ -440,6 +440,12 @@ public class MemberView extends javax.swing.JFrame {
         String inpProfesi = cmbProfesi.getSelectedItem().toString();
         String inpJenisKelamin = "";
         String inpPassword = String.valueOf(password.getPassword());
+        String hashedPassword =
+            BCrypt.hashpw(
+                    inpPassword,
+                    BCrypt.gensalt()
+            );
+        
         if (radio_laki.isSelected()) {
             inpJenisKelamin = "Laki-laki";
         } else if (radio_perempuan.isSelected()) {
@@ -466,7 +472,7 @@ public class MemberView extends javax.swing.JFrame {
     anggota.setAlamat(inpAlamat);
     anggota.setJenisKelamin(inpJenisKelamin);
     anggota.setNoHp(inpNoHp);
-    anggota.setPassword(inpPassword);
+    anggota.setPassword(hashedPassword);
     anggota.setProfesi(inpProfesi);
     anggota.setIdAnggota(idAnggota);
     anggota.setUserId(selectedUserId);
@@ -501,6 +507,12 @@ public class MemberView extends javax.swing.JFrame {
         String inpProfesi = cmbProfesi.getSelectedItem().toString();
         String inpJenisKelamin = "";
         String inpPassword = String.valueOf(password.getPassword());
+        String hashedPassword =
+            BCrypt.hashpw(
+                    inpPassword,
+                    BCrypt.gensalt()
+            );
+        
         if (radio_laki.isSelected()) {
             inpJenisKelamin = "Laki-laki";
         } else if (radio_perempuan.isSelected()) {
@@ -526,7 +538,7 @@ public class MemberView extends javax.swing.JFrame {
     anggota.setAlamat(inpAlamat);
     anggota.setJenisKelamin(inpJenisKelamin);
     anggota.setNoHp(inpNoHp);
-    anggota.setPassword(inpPassword);
+    anggota.setPassword(hashedPassword);
     anggota.setProfesi(inpProfesi);
     
     boolean result = anggotaController.addMember(anggota);
@@ -621,7 +633,6 @@ public class MemberView extends javax.swing.JFrame {
         String.valueOf(anggota.getIdAnggota())
         );
         username.setText(anggota.getUsername());
-        password.setText(anggota.getPassword());
         nama.setText(anggota.getName());
         email.setText(anggota.getEmail());
         if(anggota.getJenisKelamin().equals("laki-laki")){
