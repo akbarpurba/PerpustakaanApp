@@ -1,40 +1,59 @@
 # 📚 PerpustakaanApp
 
-Aplikasi perpustakaan berbasis desktop menggunakan Java Swing dan Apache NetBeans ANT.  
-Project ini menggunakan konsep OOP dan struktur folder yang terorganisir agar mudah dikembangkan dan dipelihara.
+Aplikasi perpustakaan berbasis desktop yang dikembangkan menggunakan Java Swing, MySQL, dan Apache NetBeans. Sistem ini dirancang untuk membantu pengelolaan data buku, anggota, serta proses peminjaman dan pengembalian buku secara efisien melalui antarmuka yang sederhana dan mudah digunakan.
+
+## 🚀 Fitur Utama
+
+### 👨‍💼 Admin
+
+* Login admin
+* Dashboard admin
+* Kelola data buku
+
+  * Tambah buku
+  * Ubah data buku
+  * Hapus buku
+  * Lihat daftar buku
+* Kelola data anggota
+
+  * Tambah anggota
+  * Ubah data anggota
+  * Hapus anggota
+  * Lihat daftar anggota
+* Kelola peminjaman buku
+* Kelola pengembalian buku
+* Monitoring status peminjaman
+* Logout
+
+### 👨‍🎓 Anggota
+
+* Registrasi akun anggota
+* Login anggota
+* Melihat katalog buku
+* Mengajukan peminjaman buku
+* Melihat riwayat peminjaman
+* Melihat status peminjaman
+* Logout
 
 ---
 
-## ✨ Features
+## 🛠️ Teknologi yang Digunakan
 
-### Admin
-- Login admin
-- CRUD buku
-- CRUD anggota
-- Manajemen peminjaman
-- Manajemen pengembalian
-- Dashboard admin
-
-### Anggota
-- Login anggota
-- Registrasi anggota
-- Melihat daftar buku
-- Melihat riwayat peminjaman
+| Teknologi       | Keterangan                       |
+| --------------- | -------------------------------- |
+| Java            | Bahasa pemrograman utama         |
+| Java Swing      | Pembuatan antarmuka desktop      |
+| Apache NetBeans | IDE pengembangan                 |
+| MySQL           | Database                         |
+| JDBC            | Koneksi Java ke MySQL            |
+| FlatLaf         | Modern Look and Feel untuk Swing |
+| jBCrypt         | Hashing password                 |
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ Arsitektur Project
 
-- Java Swing
-- Apache NetBeans
-- ANT
-- MySQL
-- JDBC
-- FlatLaf
-
----
-
-## 📁 Project Structure
+Project menggunakan pola pemisahan tanggung jawab (Separation of Concerns) agar kode lebih terstruktur dan mudah dipelihara.
 
 ```text
 src/
@@ -47,79 +66,83 @@ src/
 └── view/
 ```
 
----
+### config
 
-## 📦 Package Documentation
-
-### config/
 Berisi konfigurasi aplikasi.
 
 Contoh:
-- Koneksi database
-- Session login
-- Main application
 
----
+* Database Connection
+* Session Management
+* Main Application
 
-### controller/
-Berfungsi sebagai penghubung antara view dan business logic.
+### controller
+
+Menangani komunikasi antara View dan Service.
 
 Contoh:
-- LoginController
-- BukuController
-- AnggotaController
 
----
+* LoginController
+* BukuController
+* AnggotaController
+* PeminjamanController
 
-### dao/
-Berisi query database.
+### dao
+
+Berisi seluruh operasi database.
 
 Fungsi:
-- INSERT
-- UPDATE
-- DELETE
-- SELECT
+
+* Insert Data
+* Update Data
+* Delete Data
+* Select Data
 
 Contoh:
-- BukuDAO
-- UserDAO
 
----
+* UserDAO
+* BukuDAO
+* AnggotaDAO
+* PeminjamanDAO
 
-### model/
-Berisi class object atau entity.
+### model
+
+Representasi objek atau entitas database.
 
 Contoh:
-- Buku
-- User
-- Peminjaman
 
----
+* User
+* Admin
+* Anggota
+* Buku
+* Peminjaman
 
-### service/
+### service
+
 Berisi business logic aplikasi.
 
 Contoh:
-- Validasi login
-- Validasi peminjaman
-- Perhitungan denda
 
----
+* Login Service
+* Registrasi Service
+* Peminjaman Service
+* Pengembalian Service
 
-### utils/
-Berisi helper atau utility class.
+### utils
+
+Berisi helper dan utility class.
 
 Contoh:
-- PasswordUtil
-- AlertUtil
-- DateUtil
 
----
+* PasswordUtil
+* MessageUtil
+* DateUtil
+* LogoutUtil
 
-### view/
-Berisi seluruh tampilan GUI aplikasi.
+### view
 
-Struktur:
+Berisi seluruh tampilan aplikasi.
+
 ```text
 view/
 ├── auth/
@@ -129,55 +152,126 @@ view/
 
 ---
 
-## 🎨 UI Library
+## 🔒 Keamanan
 
-Project ini menggunakan FlatLaf untuk tampilan modern Java Swing.
+Password pengguna disimpan menggunakan hashing dengan jBCrypt sehingga tidak tersimpan dalam bentuk teks asli di database.
 
-Official Website:
-https://www.formdev.com/flatlaf/
+Contoh hasil hashing:
+
+```text
+$2a$10$6Kqg0vN2uHfN6A4gM8Nf6u2jQzqvA2s4sQ2zYQ2d2rP7r6W9hM2xG
+```
 
 ---
 
-## 📚 Libraries
+## 🗄️ Database
 
-Semua library berada di folder:
+Database yang digunakan adalah MySQL dengan tabel utama:
+
+```text
+users
+admin
+anggota
+buku
+peminjaman
+```
+
+Relasi utama:
+
+```text
+users
+│
+├── admin
+└── anggota
+
+anggota
+│
+└── peminjaman
+
+buku
+│
+└── peminjaman
+```
+
+---
+
+## 🎨 User Interface
+
+Aplikasi menggunakan FlatLaf untuk memberikan tampilan modern pada Java Swing.
+
+Fitur tampilan:
+
+* Clean UI
+* Modern Design
+* Responsive Components
+* Better User Experience
+
+---
+
+## 📦 Library
+
+Seluruh library disimpan pada folder:
 
 ```text
 lib/
 ```
 
 Contoh:
+
 ```text
 lib/
-├── flatlaf-3.7.1.jar
-└── mysql-connector-j.jar
+├── flatlaf-3.x.jar
+├── mysql-connector-j.jar
+└── jbcrypt.jar
 ```
 
 ---
 
-## ⚙️ Cara Menambahkan Library di Apache NetBeans
+## ⚙️ Instalasi
 
-1. Klik kanan project
-2. Pilih `Properties`
-3. Pilih `Libraries`
-4. Klik `Add JAR/Folder`
-5. Pilih semua file `.jar` di folder `lib/`
-6. Klik `Open`
-7. Klik `OK`
+### 1. Clone Repository
 
----
+```bash
+git clone https://github.com/username/perpustakaanapp.git
+```
 
-## ▶️ Cara Menjalankan Project
+### 2. Import Project
 
-1. Buka project di Apache NetBeans
-2. Pastikan semua library sudah ditambahkan
-3. Jalankan file:
+* Buka Apache NetBeans
+* Pilih Open Project
+* Pilih folder project
+
+### 3. Tambahkan Library
+
+* Klik kanan project
+* Properties
+* Libraries
+* Add JAR/Folder
+* Pilih seluruh file JAR pada folder lib
+
+### 4. Konfigurasi Database
+
+Buat database:
+
+```sql
+CREATE DATABASE perpustakaan;
+```
+
+Sesuaikan konfigurasi koneksi pada:
+
+```text
+src/config/Database.java
+```
+
+### 5. Jalankan Project
+
+Jalankan:
 
 ```text
 Main.java
 ```
 
-atau tekan:
+atau gunakan shortcut:
 
 ```text
 Shift + F6
@@ -185,6 +279,20 @@ Shift + F6
 
 ---
 
+## 📸 Screenshot
+
+Tambahkan screenshot aplikasi di sini.
+
+```text
+docs/
+├── login.png
+├── dashboard-admin.png
+├── data-buku.png
+└── peminjaman.png
+```
+
+---
+
 ## 👨‍💻 Author
 
-Akbar Purba
+Samōra Library

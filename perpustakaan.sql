@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 31, 2026 at 09:08 AM
+-- Generation Time: Jun 01, 2026 at 12:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,8 +41,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `user_id`, `name`, `jabatan`, `created_at`, `updated_at`) VALUES
-(4, 9, 'Admin Aja', 'Staff', '2026-05-29 15:31:22', '2026-05-30 05:55:14'),
-(7, 14, 'Akbar Maulana Purba', 'Admin Utama', '2026-05-30 05:50:04', '2026-05-30 05:50:04');
+(9, 28, 'Akbar Maulana Purba', 'Admin Utama', '2026-06-01 06:32:28', '2026-06-01 06:32:28');
 
 -- --------------------------------------------------------
 
@@ -84,7 +83,11 @@ CREATE TABLE `buku` (
 --
 
 INSERT INTO `buku` (`id_buku`, `judul_buku`, `pengarang`, `penerbit`, `tahun_terbit`, `stok`, `created_at`) VALUES
-(2, 'sangkuriang', 'akbar', 'akbarr', 2016, 100, '2026-05-30 12:04:17');
+(4, 'Laskar Pelangi', 'Andrea Hirata', 'Bentang Pustaka', 2005, 18, '2026-06-01 07:37:14'),
+(5, 'Bumi Manusia', 'Pramoedya Ananta Toer', 'Hasta Mitra', 1980, 7, '2026-06-01 07:38:12'),
+(6, 'Negeri 5 Menara', 'A. Fuadi', 'Gramedia Pustaka Utama', 2009, 8, '2026-06-01 07:38:50'),
+(7, 'Sang Pemimpi', 'Andrea Hirata', 'Bentang Pustaka', 2006, 10, '2026-06-01 07:39:26'),
+(8, 'Dilan 1990', 'Pidi Baiq', 'Pastel Books', 2014, 20, '2026-06-01 07:40:17');
 
 -- --------------------------------------------------------
 
@@ -122,8 +125,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `created_at`, `updated_at`) VALUES
-(9, 'admin', '123', 'admin', '2026-05-29 15:31:22', '2026-05-29 15:31:22'),
-(14, 'akbar123', '123', 'admin', '2026-05-30 05:50:04', '2026-05-30 05:50:04');
+(28, 'admin', '$2a$10$eARN/euAOgmddze253lgQeQAMmlCJzGFLPcjOnojiDTT.6OjtFkvy', 'admin', '2026-06-01 06:30:15', '2026-06-01 10:38:18');
 
 --
 -- Indexes for dumped tables
@@ -173,31 +175,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `anggota`
 --
 ALTER TABLE `anggota`
-  MODIFY `id_anggota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_anggota` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `buku`
 --
 ALTER TABLE `buku`
-  MODIFY `id_buku` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_buku` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  MODIFY `id_pinjam` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pinjam` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Constraints for dumped tables
