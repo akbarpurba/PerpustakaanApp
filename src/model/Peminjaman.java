@@ -9,6 +9,7 @@ package model;
  * @author Acer
  */
 public class Peminjaman {
+
     private int idPinjam;
     private int idAnggota;
     private int idBuku;
@@ -16,6 +17,7 @@ public class Peminjaman {
     private String nama;
     private String noHp;
     private String judulBuku;
+    private String penerbit;
 
     private String tanggalPinjam;
     private int lamaPeminjaman;
@@ -78,6 +80,14 @@ public class Peminjaman {
         return tanggalPinjam;
     }
 
+    public String getPenerbit() {
+        return penerbit;
+    }
+
+    public void setPenerbit(String penerbit) {
+        this.penerbit = penerbit;
+    }
+
     public void setTanggalPinjam(String tanggalPinjam) {
         this.tanggalPinjam = tanggalPinjam;
     }
@@ -105,4 +115,5 @@ public class Peminjaman {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

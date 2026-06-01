@@ -55,4 +55,8 @@ public class PeminjamanController {
     public Peminjaman getPeminjamanById(int id){
         return peminjamanService.getPeminjamanById(id);
     }
+    
+    public ArrayList<Peminjaman> getPeminjamanByMember(int idAnggota){
+        return peminjamanService.getPeminjamanByMember(idAnggota);
+    }
 }

@@ -72,4 +72,7 @@ public class PeminjamanService {
         return peminjamanDAO.getPeminjamanById(id);
     }
    
+    public ArrayList<Peminjaman> getPeminjamanByMember(int id_anggota){
+        return peminjamanDAO.getPeminjamanByMember(id_anggota);
+    }
 }

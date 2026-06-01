@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import model.Buku;
 import utils.MessageUtil;
 import model.Peminjaman;
+import utils.LogoutUtil;
 
 /**
  *
@@ -99,7 +100,7 @@ public class BorrowingView extends javax.swing.JFrame {
         btnExit = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
+        logout = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -235,11 +236,12 @@ public class BorrowingView extends javax.swing.JFrame {
         jLabel2.setForeground(java.awt.Color.white);
         jLabel2.setText("Pinjam Buku");
 
-        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jButton7.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton7.setText("Logout");
-        jButton7.setBorder(null);
-        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logout.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        logout.setForeground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        logout.setText("Logout");
+        logout.setBorder(null);
+        logout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logout.addActionListener(this::logoutActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -249,7 +251,7 @@ public class BorrowingView extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -257,7 +259,7 @@ public class BorrowingView extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -355,7 +357,7 @@ public class BorrowingView extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(tanggalKembali)
                     .addComponent(nama)
@@ -689,6 +691,11 @@ public class BorrowingView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lamaPinjamKeyReleased
 
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        // TODO add your handling code here:
+        LogoutUtil.logout(this);
+    }//GEN-LAST:event_logoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -720,7 +727,6 @@ public class BorrowingView extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrow;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -737,6 +743,7 @@ public class BorrowingView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JComboBox<String> judulBuku;
     private javax.swing.JTextField lamaPinjam;
+    private javax.swing.JButton logout;
     private javax.swing.JTextField nama;
     private javax.swing.JTextField noHp;
     private javax.swing.JButton pinjam;

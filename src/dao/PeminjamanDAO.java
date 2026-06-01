@@ -469,4 +469,118 @@ public class PeminjamanDAO {
 
     return peminjaman;
 }
+    
+public ArrayList<Peminjaman> getPeminjamanByMember(
+        int idAnggota
+) {
+
+    ArrayList<Peminjaman> list =
+            new ArrayList<>();
+
+    try {
+
+        Connection conn =
+                Database.getConnection();
+
+        String sql = """
+            SELECT
+                p.id_pinjam,
+                p.id_anggota,
+                p.id_buku,
+                p.tanggal_pinjam,
+                p.lama_peminjaman,
+                p.tanggal_kembali,
+                p.status,
+
+                a.name,
+                a.no_hp,
+
+                b.judul_buku,
+                b.penerbit
+
+            FROM peminjaman p
+
+            JOIN anggota a
+            ON p.id_anggota = a.id_anggota
+
+            JOIN buku b
+            ON p.id_buku = b.id_buku
+
+            WHERE p.id_anggota = ?
+
+            ORDER BY p.id_pinjam DESC
+        """;
+
+        PreparedStatement pst =
+                conn.prepareStatement(sql);
+
+        pst.setInt(
+                1,
+                idAnggota
+        );
+
+        ResultSet rs =
+                pst.executeQuery();
+
+        while (rs.next()) {
+
+            Peminjaman peminjaman =
+                    new Peminjaman();
+
+            peminjaman.setIdPinjam(
+                    rs.getInt("id_pinjam")
+            );
+
+            peminjaman.setIdAnggota(
+                    rs.getInt("id_anggota")
+            );
+
+            peminjaman.setIdBuku(
+                    rs.getInt("id_buku")
+            );
+
+            peminjaman.setNama(
+                    rs.getString("name")
+            );
+
+            peminjaman.setNoHp(
+                    rs.getString("no_hp")
+            );
+
+            peminjaman.setJudulBuku(
+                    rs.getString("judul_buku")
+            );
+
+            peminjaman.setPenerbit(
+                    rs.getString("penerbit")
+            );
+
+            peminjaman.setTanggalPinjam(
+                    rs.getString("tanggal_pinjam")
+            );
+
+            peminjaman.setLamaPeminjaman(
+                    rs.getInt("lama_peminjaman")
+            );
+
+            peminjaman.setTanggalKembali(
+                    rs.getString("tanggal_kembali")
+            );
+
+            peminjaman.setStatus(
+                    rs.getString("status")
+            );
+
+            list.add(
+                    peminjaman
+            );
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+    }
+
+    return list;
+}
 }

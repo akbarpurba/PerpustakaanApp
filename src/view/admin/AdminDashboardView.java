@@ -7,6 +7,7 @@ import config.Session;
 import controller.AdminController;
 import model.Admin;
 import utils.FormUtils;
+import utils.LogoutUtil;
  /*
  * @author Acer
  */
@@ -86,6 +87,7 @@ public class AdminDashboardView extends javax.swing.JFrame {
         jButton1.setText("Logout");
         jButton1.setBorder(null);
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -394,6 +396,11 @@ public class AdminDashboardView extends javax.swing.JFrame {
     private void nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nameActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        LogoutUtil.logout(this);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
