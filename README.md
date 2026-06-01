@@ -232,7 +232,7 @@ lib/
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/perpustakaanapp.git
+git clone https://github.com/akbarpurba/perpustakaanapp.git
 ```
 
 ### 2. Import Project
