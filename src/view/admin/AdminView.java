@@ -35,6 +35,8 @@ public class AdminView extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         tampilDataAdmin();
         TableUtils.setTableStyle(table_admin);
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
     }
 
     private void tampilDataAdmin() {
@@ -77,6 +79,9 @@ public class AdminView extends javax.swing.JFrame {
         jabatan.setSelectedIndex(0);
 
         table_admin.clearSelection();
+        btn_add.setEnabled(true);
+        btn_update.setEnabled(false);
+        btn_delete.setEnabled(false);
     }
 
     /**
@@ -173,7 +178,7 @@ public class AdminView extends javax.swing.JFrame {
         name.addActionListener(this::nameActionPerformed);
 
         jabatan.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jabatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin Utama", "Pustakawan", "Staff" }));
+        jabatan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Pilih Jabatan--", "Admin Utama", "Pustakawan", "Staff" }));
         jabatan.addActionListener(this::jabatanActionPerformed);
 
         password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -326,6 +331,13 @@ public class AdminView extends javax.swing.JFrame {
     private void btn_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addActionPerformed
         // TODO add your handling code here:
         AdminController adminController = new AdminController();
+        boolean cekUsername = adminController.handlingDuplicateUsername(username.getText());
+        if(cekUsername){
+      
+            MessageUtil.warning(this, "Username Sudah digunakan");
+            username.requestFocus();
+            return;
+        }
         String usernameValue
                 = username.getText();
         String nameValue
@@ -347,6 +359,7 @@ public class AdminView extends javax.swing.JFrame {
 
         if (usernameValue.isEmpty()
                 || nameValue.isEmpty()
+                || jabatan.getSelectedIndex() == 0
                 || passwordValue.isEmpty()) {
 
             MessageUtil.warning(
@@ -414,11 +427,40 @@ public class AdminView extends javax.swing.JFrame {
 
             return;
         }
+        String usernameValue
+                = username.getText();
+        String nameValue
+                = name.getText();
+
+        String passwordValue
+                = String.valueOf(
+                        password.getPassword()
+                );
+        if (usernameValue.isEmpty()
+                || nameValue.isEmpty()
+                || jabatan.getSelectedIndex() == 0
+                || passwordValue.isEmpty()) {
+
+            MessageUtil.warning(
+                    this,
+                    "Lengkapi semua data"
+            );
+            
+            return;
+        }
         AdminController adminController
                 = new AdminController();
 
         Admin admin = new Admin();
-
+        boolean cekUsername = adminController.handlingDuplicateUsernameForUpdate(username.getText(), selectedUserId);
+        if(cekUsername){
+             MessageUtil.warning(
+                    this,
+                    "Username sudah digunakan"
+            );
+            username.requestFocus();
+            return;
+        }
         admin.setIdAdmin(
                 Integer.parseInt(
                         id_admin.getText()
@@ -533,6 +575,9 @@ public class AdminView extends javax.swing.JFrame {
 
     private void table_adminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_adminMouseClicked
         // TODO add your handling code here:
+        btn_add.setEnabled(false);
+        btn_update.setEnabled(true);
+        btn_delete.setEnabled(true);
          int row
             = table_admin.getSelectedRow();
 
@@ -592,19 +637,6 @@ public class AdminView extends javax.swing.JFrame {
 
     private void usernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFocusLost
         // TODO add your handling code here:
-        AdminController adminController = new AdminController();
-        String usernameValue
-                = username.getText();
-        boolean usernameReady = adminController.handlingDuplicateUsername(usernameValue);
-        if(usernameReady){
-             MessageUtil.warning(
-                    this,
-                    "Username sudah digunakan"
-            );
-             username.setText("");
-             username.requestFocus();
-             return;
-        }
         
     }//GEN-LAST:event_usernameFocusLost
 

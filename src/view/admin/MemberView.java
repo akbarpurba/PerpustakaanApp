@@ -35,6 +35,8 @@ public class MemberView extends javax.swing.JFrame {
         genderGroup.add(radio_perempuan);
         tampilData();
         TableUtils.setTableStyle(table_member);
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
 
     private void tampilData() {
@@ -73,6 +75,9 @@ public class MemberView extends javax.swing.JFrame {
         cmbProfesi.setSelectedIndex(0);
         genderGroup.clearSelection();
         username.requestFocus();
+        add.setEnabled(true);
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
 
     /**
@@ -180,7 +185,7 @@ public class MemberView extends javax.swing.JFrame {
         username.addActionListener(this::usernameActionPerformed);
 
         cmbProfesi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbProfesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pelajar/Siswa", "Mahasiswa", "Guru/Dosen", "PNS", "Pegawai Swasta", "Wiraswasta", "Buruh", "Freelancer", "Tidak Bekerja", "Rakyat Jelata" }));
+        cmbProfesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Pilih Profesi--", "Pelajar/Siswa", "Mahasiswa", "Guru/Dosen", "PNS", "Pegawai Swasta", "Wiraswasta", "Buruh", "Freelancer", "Tidak Bekerja" }));
         cmbProfesi.addActionListener(this::cmbProfesiActionPerformed);
 
         email.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -323,15 +328,14 @@ public class MemberView extends javax.swing.JFrame {
                                         .addComponent(delete)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(reset))))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel4)
-                                .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(id_member, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel11)
-                                .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))))
+                            .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(id_member, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11)
+                            .addComponent(nama, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1)))
@@ -430,7 +434,9 @@ public class MemberView extends javax.swing.JFrame {
 
             return;
         }
+        
         AnggotaController anggotaController = new AnggotaController();
+        
         int idAnggota = Integer.parseInt(id_member.getText());
         String inpUsername = username.getText();
         String inpNama = nama.getText();
@@ -446,7 +452,20 @@ public class MemberView extends javax.swing.JFrame {
                     BCrypt.gensalt()
             );
         
-        if (radio_laki.isSelected()) {
+        
+        
+    if(inpUsername.isEmpty() ||
+       inpNama.isEmpty() ||
+       inpEmail.isEmpty() ||
+       inpPassword.isEmpty() ||
+       inpAlamat.isEmpty()||
+       inpNoHp.isEmpty() ||
+       cmbProfesi.getSelectedIndex() == 0 
+       ){
+        MessageUtil.warning(this, "Semua field wajib di isi");
+        return;
+    }
+    if (radio_laki.isSelected()) {
             inpJenisKelamin = "Laki-laki";
         } else if (radio_perempuan.isSelected()) {
             inpJenisKelamin = "Perempuan";
@@ -454,13 +473,18 @@ public class MemberView extends javax.swing.JFrame {
             MessageUtil.warning(this, "Pilih jenis kelamin terlebih dahulu");
             return;
         }
-        
-    if(inpUsername.isEmpty() ||
-       inpNama.isEmpty() ||
-       inpEmail.isEmpty() ||
-       inpPassword.isEmpty()
-       ){
-        MessageUtil.warning(this, "Semua field wajib di isi");
+    
+    boolean duplicateUsername = anggotaController.handlingUsernameUpdate(inpUsername, selectedUserId);
+    boolean duplicateEmail = anggotaController.handlingEmailUpdate(inpEmail, selectedUserId);
+    
+    if(duplicateUsername){
+        MessageUtil.warning(this, "Username sudah digunakan");
+        username.requestFocus();
+        return;
+    }
+    if(duplicateEmail){
+        MessageUtil.warning(this, "Email sudah digunakan");
+        email.requestFocus();
         return;
     }
     
@@ -500,8 +524,20 @@ public class MemberView extends javax.swing.JFrame {
         // TODO add your handling code here:
         AnggotaController anggotaController = new AnggotaController();
         String inpUsername = username.getText();
+        boolean duplicateUsername = anggotaController.handlingDuplicateUsername(inpUsername);
+        if(duplicateUsername){
+            MessageUtil.warning(this, "Username sudah digunakan");
+            username.requestFocus();
+            return;
+        }
         String inpNama = nama.getText();
         String inpEmail = email.getText();
+        boolean duplicateEmail = anggotaController.handlingDuplicateEmail(inpEmail);
+        if(duplicateEmail){
+            MessageUtil.warning(this, "Email sudah digunakan");
+            email.requestFocus();
+            return;
+        }
         String inpAlamat = alamat.getText();
         String inpNoHp = noHp.getText();
         String inpProfesi = cmbProfesi.getSelectedItem().toString();
@@ -513,7 +549,20 @@ public class MemberView extends javax.swing.JFrame {
                     BCrypt.gensalt()
             );
         
-        if (radio_laki.isSelected()) {
+        
+        
+    if(inpUsername.isEmpty() ||
+       inpNama.isEmpty() ||
+       inpEmail.isEmpty() ||
+       inpPassword.isEmpty() ||
+       inpAlamat.isEmpty()||
+       inpNoHp.isEmpty() ||
+       cmbProfesi.getSelectedIndex() == 0 
+       ){
+        MessageUtil.warning(this, "Semua field wajib di isi");
+        return;
+    }
+    if (radio_laki.isSelected()) {
             inpJenisKelamin = "Laki-laki";
         } else if (radio_perempuan.isSelected()) {
             inpJenisKelamin = "Perempuan";
@@ -521,15 +570,6 @@ public class MemberView extends javax.swing.JFrame {
             MessageUtil.warning(this, "Pilih jenis kelamin terlebih dahulu");
             return;
         }
-        
-    if(inpUsername.isEmpty() ||
-       inpNama.isEmpty() ||
-       inpEmail.isEmpty() ||
-       inpPassword.isEmpty()
-       ){
-        MessageUtil.warning(this, "Semua field wajib di isi");
-        return;
-    }
     
     Anggota anggota = new Anggota();
     anggota.setUsername(inpUsername);
@@ -580,26 +620,11 @@ public class MemberView extends javax.swing.JFrame {
 
     private void usernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameFocusLost
         // TODO add your handling code here:
-        AnggotaController anggotaController = new AnggotaController();
-        boolean duplicateUsername = anggotaController.handlingDuplicateUsername(username.getText());
-        if(duplicateUsername){
-            MessageUtil.warning(this, "Username sudah digunakan");
-            username.setText("");
-            username.requestFocus();
-            return;
-        }
+      
     }//GEN-LAST:event_usernameFocusLost
 
     private void emailFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_emailFocusLost
-        // TODO add your handling code here:
-        AnggotaController anggotaController = new AnggotaController();
-        boolean duplicateEmail = anggotaController.handlingDuplicateEmail(email.getText());
-        if(duplicateEmail){
-            MessageUtil.warning(this, "Username sudah digunakan");
-            email.setText("");
-            email.requestFocus();
-            return;
-        }
+      
     }//GEN-LAST:event_emailFocusLost
 
     private void addFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addFocusLost
@@ -608,6 +633,9 @@ public class MemberView extends javax.swing.JFrame {
 
     private void table_memberMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_memberMouseClicked
         // TODO add your handling code here:
+        update.setEnabled(true);
+        delete.setEnabled(true);
+        add.setEnabled(false);
          int row
             = table_member.getSelectedRow();
 

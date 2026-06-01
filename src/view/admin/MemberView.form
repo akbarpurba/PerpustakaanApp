@@ -339,16 +339,16 @@
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="10">
-                <StringItem index="0" value="Pelajar/Siswa"/>
-                <StringItem index="1" value="Mahasiswa"/>
-                <StringItem index="2" value="Guru/Dosen"/>
-                <StringItem index="3" value="PNS"/>
-                <StringItem index="4" value="Pegawai Swasta"/>
-                <StringItem index="5" value="Wiraswasta"/>
-                <StringItem index="6" value="Buruh"/>
-                <StringItem index="7" value="Freelancer"/>
-                <StringItem index="8" value="Tidak Bekerja"/>
-                <StringItem index="9" value="Rakyat Jelata"/>
+                <StringItem index="0" value="--Pilih Profesi--"/>
+                <StringItem index="1" value="Pelajar/Siswa"/>
+                <StringItem index="2" value="Mahasiswa"/>
+                <StringItem index="3" value="Guru/Dosen"/>
+                <StringItem index="4" value="PNS"/>
+                <StringItem index="5" value="Pegawai Swasta"/>
+                <StringItem index="6" value="Wiraswasta"/>
+                <StringItem index="7" value="Buruh"/>
+                <StringItem index="8" value="Freelancer"/>
+                <StringItem index="9" value="Tidak Bekerja"/>
               </StringArray>
             </Property>
           </Properties>

@@ -26,14 +26,37 @@ public class AccountView extends javax.swing.JFrame {
     public AccountView() {
         initComponents();
         setLocationRelativeTo(null);
+        loadProfesi();
         loadProfile();
         ButtonGroup group = new ButtonGroup();
 
         group.add(radio_laki);
 
         group.add(radio_perempuan);
+        
     }
 
+    private void loadProfesi(){
+        cmbProfesi.removeAllItems();
+        String list_profesi[] ={
+            "Pelajar/Siswa",
+             "Mahasiswa",
+                "Guru/Dosen",
+                "PNS",
+                "Pegawai Swasta",
+                "Wiraswasta",
+                "Buruh",
+                "Freelancer",
+                "Tidak Bekerja"
+             }; 
+        cmbProfesi.addItem("--Pilih Profesi");
+        
+        for(String prf : list_profesi){
+            cmbProfesi.addItem(prf);
+        }
+        cmbProfesi.setSelectedItem("");
+    }
+    
     private void loadProfile() {
         AnggotaController anggotaController
                 = new AnggotaController();
@@ -64,10 +87,8 @@ public class AccountView extends javax.swing.JFrame {
             no_hp.setText(
                     anggota.getNoHp()
             );
-
-            profesi.setSelectedItem(
-                    anggota.getProfesi()
-            );
+            
+            cmbProfesi.setSelectedItem(anggota.getProfesi());
 
             if (anggota.getJenisKelamin()
                     .equals("laki-laki")) {
@@ -120,7 +141,7 @@ public class AccountView extends javax.swing.JFrame {
         ubahData = new javax.swing.JButton();
         radio_laki = new javax.swing.JRadioButton();
         radio_perempuan = new javax.swing.JRadioButton();
-        profesi = new javax.swing.JComboBox<>();
+        cmbProfesi = new javax.swing.JComboBox<>();
         password = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -361,9 +382,8 @@ public class AccountView extends javax.swing.JFrame {
         radio_perempuan.setText("Perempuan");
         radio_perempuan.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        profesi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        profesi.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pelajar/Siswa", "Mahasiswa", "Guru/Dosen", "PNS", "Pegawai Swasta", "Wiraswasta", "Buruh", "Freelancer", "Tidak Bekerja", "Rakyat Jelata" }));
-        profesi.addActionListener(this::profesiActionPerformed);
+        cmbProfesi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cmbProfesi.addActionListener(this::cmbProfesiActionPerformed);
 
         password.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         password.setToolTipText("Enter your secret password");
@@ -410,7 +430,7 @@ public class AccountView extends javax.swing.JFrame {
                                 .addComponent(radio_laki)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(radio_perempuan))
-                            .addComponent(profesi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cmbProfesi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(203, 203, 203)
@@ -453,7 +473,7 @@ public class AccountView extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9)
-                            .addComponent(profesi))))
+                            .addComponent(cmbProfesi))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ubahData)
                 .addGap(79, 79, 79))
@@ -581,6 +601,33 @@ public class AccountView extends javax.swing.JFrame {
             jenisKelaminValue = "perempuan";
         }
 
+        if (
+    username.getText().trim().isEmpty()
+    ||
+    name.getText().trim().isEmpty()
+    ||
+    email.getText().trim().isEmpty()
+    ||
+    String.valueOf(
+            password.getPassword()
+    ).trim().isEmpty()
+    ||
+    alamat.getText().trim().isEmpty()
+    ||
+    no_hp.getText().trim().isEmpty()
+    ||
+    jenisKelaminValue.isEmpty() || jenisKelaminValue == null
+    ||
+    cmbProfesi.getSelectedIndex() == 0
+) {
+
+    MessageUtil.warning(
+            this,
+            "Lengkapi semua data terlebih dahulu"
+    );
+
+    return;
+}
         Anggota anggota = new Anggota();
 
         anggota.setUserId(Session.id);
@@ -620,7 +667,7 @@ public class AccountView extends javax.swing.JFrame {
         );
 
         anggota.setProfesi(
-                profesi.getSelectedItem()
+                cmbProfesi.getSelectedItem()
                         .toString()
         );
 
@@ -633,24 +680,25 @@ public class AccountView extends javax.swing.JFrame {
                 );
 
         if (success) {
-
+            loadProfile();
             MessageUtil.success(
                     this,
                     "Profile updated successfully"
             );
-
+            password.setText("");
         } else {
-
+            loadProfile();
             MessageUtil.error(
                     this,
                     "Failed to update profile"
             );
+            password.setText("");
         }
     }//GEN-LAST:event_ubahDataActionPerformed
 
-    private void profesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profesiActionPerformed
+    private void cmbProfesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProfesiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_profesiActionPerformed
+    }//GEN-LAST:event_cmbProfesiActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
         // TODO add your handling code here:
@@ -742,6 +790,7 @@ public class AccountView extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrow;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnHome;
+    private javax.swing.JComboBox<String> cmbProfesi;
     private javax.swing.JTextField email;
     private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
@@ -762,7 +811,6 @@ public class AccountView extends javax.swing.JFrame {
     private javax.swing.JTextField name;
     private javax.swing.JTextField no_hp;
     private javax.swing.JPasswordField password;
-    private javax.swing.JComboBox<String> profesi;
     private javax.swing.JRadioButton radio_laki;
     private javax.swing.JRadioButton radio_perempuan;
     private javax.swing.JButton ubahData;

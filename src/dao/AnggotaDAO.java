@@ -97,7 +97,11 @@ public class AnggotaDAO {
         if (rs.next()) {
 
             anggota = new Anggota();
-
+            
+            anggota.setIdAnggota(
+                    rs.getInt("id_anggota")
+            );
+            
             anggota.setUserId(
                     rs.getInt("user_id")
             );

@@ -42,6 +42,8 @@ public class BorrowView extends javax.swing.JFrame {
         status.addItem("--Pilih Status Peminjaman--");
         status.addItem("dipinjam");
         status.addItem("dikembalikan");
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
     private void loadData(){
         DefaultTableModel model
@@ -96,6 +98,9 @@ public class BorrowView extends javax.swing.JFrame {
         cmbAnggota.setEnabled(true);
         cmbBuku.setEnabled(true);
         lamaPinjam.setEditable(true);
+        add.setEnabled(true);
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
     private String hitungJangkaPinjam(){
 
@@ -490,6 +495,9 @@ public class BorrowView extends javax.swing.JFrame {
 
     private void table_pinjamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_pinjamMouseClicked
         // TODO add your handling code here:
+        update.setEnabled(true);
+        delete.setEnabled(true);
+        add.setEnabled(false);
         cmbAnggota.setEnabled(false);
         cmbBuku.setEnabled(false);
         lamaPinjam.setEditable(false);

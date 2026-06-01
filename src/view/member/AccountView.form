@@ -381,7 +381,7 @@
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="radio_perempuan" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="profesi" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="cmbProfesi" alignment="1" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -436,7 +436,7 @@
                                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="email" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="profesi" alignment="3" max="32767" attributes="0"/>
+                                      <Component id="cmbProfesi" alignment="3" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -640,28 +640,17 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="profesi">
+                <Component class="javax.swing.JComboBox" name="cmbProfesi">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="14" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="10">
-                        <StringItem index="0" value="Pelajar/Siswa"/>
-                        <StringItem index="1" value="Mahasiswa"/>
-                        <StringItem index="2" value="Guru/Dosen"/>
-                        <StringItem index="3" value="PNS"/>
-                        <StringItem index="4" value="Pegawai Swasta"/>
-                        <StringItem index="5" value="Wiraswasta"/>
-                        <StringItem index="6" value="Buruh"/>
-                        <StringItem index="7" value="Freelancer"/>
-                        <StringItem index="8" value="Tidak Bekerja"/>
-                        <StringItem index="9" value="Rakyat Jelata"/>
-                      </StringArray>
+                      <StringArray count="0"/>
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profesiActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbProfesiActionPerformed"/>
                   </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

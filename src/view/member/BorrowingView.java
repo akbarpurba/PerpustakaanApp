@@ -61,24 +61,25 @@ public class BorrowingView extends javax.swing.JFrame {
             );
         }
     }
-     
-    private void loadBuku(){
+
+    private void loadBuku() {
         BukuController bukuController = new BukuController();
         ArrayList<Buku> list = bukuController.getAllBuku();
         judulBuku.removeAllItems();
         judulBuku.addItem("-- Pilih Buku --");
-        
-        for(Buku buku : list){
+
+        for (Buku buku : list) {
             judulBuku.addItem(buku.getJudulBuku());
         }
     }
-    
-    private void resetForm(){
+
+    private void resetForm() {
         judulBuku.setSelectedIndex(0);
         lamaPinjam.setText("");
         tanggalKembali.setText("");
         judulBuku.requestFocus();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -506,58 +507,116 @@ public class BorrowingView extends javax.swing.JFrame {
 
     private void pinjamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pinjamActionPerformed
         // TODO add your handling code here:
-        /*
-         Buku selectedBuku
-            = (Buku) judul_buku
-                    .getSelectedItem();
+        BukuController bukuController
+                = new BukuController();
 
-    Peminjaman peminjaman
-            = new Peminjaman();
+        AnggotaController anggotaController
+                = new AnggotaController();
 
-    peminjaman.setIdAnggota(
-            Session.id
-    );
+        if (judulBuku.getSelectedItem() == null
+                || lamaPinjam.getText().trim().isEmpty()) {
 
-    peminjaman.setIdBuku(
-            selectedBuku.getIdBuku()
-    );
-
-    peminjaman.setTanggalPinjam(
-            tanggal_pinjam.getText()
-    );
-
-    peminjaman.setLamaPeminjaman(
-            Integer.parseInt(
-                    lama_pinjam.getText()
-            )
-    );
-
-    peminjaman.setTanggalKembali(
-            tanggal_kembali.getText()
-    );
-
-    PeminjamanController controller
-            = new PeminjamanController();
-
-    boolean success
-            = controller.pinjamBuku(
-                    peminjaman
+            MessageUtil.warning(
+                    this,
+                    "Lengkapi data terlebih dahulu"
             );
 
-    if (success) {
+            return;
+        }
 
-        MessageUtil.success(
-                this,
-                "Book borrowed successfully"
+        String judulBukuTerpilih
+                = judulBuku.getSelectedItem()
+                        .toString();
+
+        int idBuku
+                = bukuController.getIdByJudul(
+                        judulBukuTerpilih
+                );
+
+        Anggota anggota
+                = anggotaController.getProfile(
+                        Session.id
+                );
+       
+        if (anggota == null) {
+
+            MessageUtil.error(
+                    this,
+                    "Data anggota tidak ditemukan"
+            );
+
+            return;
+        }
+
+        int idAnggota
+                = anggota.getIdAnggota();
+
+        Peminjaman peminjaman
+                = new Peminjaman();
+
+        peminjaman.setIdAnggota(
+                idAnggota
         );
 
-    } else {
-
-        MessageUtil.error(
-                this,
-                "Failed to borrow book"
+        peminjaman.setIdBuku(
+                idBuku
         );
-    }*/
+
+        peminjaman.setTanggalPinjam(
+                tanggalPinjam.getText()
+        );
+
+        try {
+
+            Integer.parseInt(
+                    lamaPinjam.getText()
+            );
+
+        } catch (NumberFormatException e) {
+
+            MessageUtil.warning(
+                    this,
+                    "Lama peminjaman harus berupa angka"
+            );
+
+            return;
+        }
+
+        peminjaman.setLamaPeminjaman(
+                Integer.parseInt(
+                        lamaPinjam.getText()
+                )
+        );
+
+        peminjaman.setTanggalKembali(
+                tanggalKembali.getText()
+        );
+
+        
+        PeminjamanController peminjamanController
+                = new PeminjamanController();
+
+        boolean hasil
+                = peminjamanController.pinjamBuku(
+                        peminjaman
+                );
+
+        if (hasil) {
+
+            MessageUtil.success(
+                    this,
+                    "Berhasil meminjam buku"
+            );
+
+            resetForm();
+
+        } else {
+
+            MessageUtil.error(
+                    this,
+                    "Gagal meminjam buku"
+            );
+        }
     }//GEN-LAST:event_pinjamActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed

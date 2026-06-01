@@ -26,6 +26,8 @@ public class BookView extends javax.swing.JFrame {
         initComponents();
         tampilData();
         TableUtils.setTableStyle(table_buku);
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
     
     
@@ -57,6 +59,9 @@ public class BookView extends javax.swing.JFrame {
         tahunTerbit.setText("");
         stok.setText("");
         judulBuku.requestFocus();
+        add.setEnabled(true);
+        update.setEnabled(false);
+        delete.setEnabled(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -454,6 +459,9 @@ public class BookView extends javax.swing.JFrame {
 
     private void table_bukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_bukuMouseClicked
         // TODO add your handling code here:
+        update.setEnabled(true);
+        delete.setEnabled(true);
+        add.setEnabled(false);
         int row = table_buku.getSelectedRow();
         if(row < 0){
             return;
